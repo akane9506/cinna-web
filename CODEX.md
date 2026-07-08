@@ -8,6 +8,7 @@ changes the workspace. The user will make all changes manually. Show code change
 in code blocks rather than diffs.
 
 ## Animation Stack
+
 ```
 pixi.js@8.2.6
 @pixi/react

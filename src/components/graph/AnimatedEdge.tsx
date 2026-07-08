@@ -54,12 +54,7 @@ export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
   return <pixiGraphics draw={draw} />;
 }
 
-function drawEdge(
-  graphics: Graphics,
-  start: Point,
-  end: Point,
-  progress: number,
-) {
+function drawEdge(graphics: Graphics, start: Point, end: Point, progress: number) {
   const path = createAnimatedEdgePath(start, end, progress);
   graphics.clear().path(path).stroke({
     color: "coral",

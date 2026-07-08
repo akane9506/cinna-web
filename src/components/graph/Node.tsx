@@ -43,12 +43,7 @@ export default function Node({ x, y }: NodeProps) {
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
       <pixiGraphics draw={drawBody} />
-      <pixiText
-        text={"I/O Processor"}
-        x={width / 2}
-        y={height / 2}
-        anchor={0.5}
-      />
+      <pixiText text={"I/O Processor"} x={width / 2} y={height / 2} anchor={0.5} />
     </pixiContainer>
   );
 }

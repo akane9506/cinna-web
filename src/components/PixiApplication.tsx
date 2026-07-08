@@ -19,10 +19,7 @@ export default function PixiApplication() {
         resolution={window.devicePixelRatio}
       >
         <Edge start={new Point(300, 100 + 70)} end={new Point(500, 320 + 70)} />
-        <AnimatedEdge
-          start={new Point(300, 100 + 70)}
-          end={new Point(500, 320 + 70)}
-        />
+        <AnimatedEdge start={new Point(300, 100 + 70)} end={new Point(500, 320 + 70)} />
         <Node x={100} y={100} nodeType="IO" />
         <Node x={500} y={320} nodeType="IO" />
       </Application>
