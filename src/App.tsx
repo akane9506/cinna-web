@@ -1,5 +1,11 @@
+import PixiApplication from "./components/PixiApplication";
+
 function App() {
-  return <div>Hello</div>;
+  return (
+    <div className="w-full h-full">
+      <PixiApplication />
+    </div>
+  );
 }
 
 export default App;
