@@ -17,20 +17,9 @@ export default function Edge({ start, end }: EdgeProps) {
   return <pixiGraphics draw={draw} />;
 }
 
-function createEdgePath(
-  start: Point,
-  end: Point,
-  offset: number = 160,
-): GraphicsPath {
+function createEdgePath(start: Point, end: Point, offset: number = 160): GraphicsPath {
   const path = new GraphicsPath();
   path.moveTo(start.x, start.y);
-  path.bezierCurveTo(
-    start.x + offset,
-    start.y,
-    end.x - offset,
-    end.y,
-    end.x,
-    end.y,
-  );
+  path.bezierCurveTo(start.x + offset, start.y, end.x - offset, end.y, end.x, end.y);
   return path;
 }
