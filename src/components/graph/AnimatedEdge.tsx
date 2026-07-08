@@ -22,13 +22,9 @@ type BezierPoints = {
 
 export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
   const graphicRef = useRef<Graphics>(null);
-  const draw = useCallback(
-    (graphics: Graphics) => {
-      graphicRef.current = graphics;
-      drawEdge(graphics, start, end, 0);
-    },
-    [start, end],
-  );
+  const draw = useCallback((graphics: Graphics) => {
+    graphicRef.current = graphics;
+  }, []);
 
   useGSAP(
     () => {
@@ -37,18 +33,18 @@ export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
       const state = {
         progress: 0,
       };
+      const render = () => {
+        drawEdge(graphics, start, end, state.progress);
+      };
+      render();
       gsap.to(state, {
         progress: 1,
         duration: 2,
         ease: "power2.out",
-        onStart: () => {
-          drawEdge(graphics, start, end, 0);
-        },
-        onUpdate: () => {
-          drawEdge(graphics, start, end, state.progress);
-        },
+        onUpdate: render,
         onComplete: () => {
-          drawEdge(graphics, start, end, 1);
+          state.progress = 1;
+          render();
         },
       });
     },
@@ -85,7 +81,7 @@ function createAnimatedEdgePath(
     c1: cc1,
     c2: cc2,
     bEnd: cbEnd,
-  } = splitCubicBezier(bStart, c1, c2, bEnd, progress);
+  } = splitCubicBezier(bStart, c1, c2, bEnd, clampedProgress);
   path.moveTo(cbStart.x, cbStart.y);
   if (clampedProgress > 0) {
     path.bezierCurveTo(cc1.x, cc1.y, cc2.x, cc2.y, cbEnd.x, cbEnd.y);
