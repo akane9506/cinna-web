@@ -2,11 +2,11 @@ import { Graphics } from "pixi.js";
 import { useCallback } from "react";
 import { PORT_SIZE } from "@/components/graph/shared";
 import type { NodeStyle, NodeProps } from "@/components/graph/types";
+import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
 const nodeStyle: NodeStyle = {
   width: 160,
   height: 60,
-  outputPorts: 1,
   radius: 20,
   text: "I/O Processor",
 };
@@ -35,7 +35,7 @@ export default function IONode({ x, y }: NodeProps) {
   );
 
   return (
-    <pixiContainer x={x} y={y}>
+    <AlignedPixiContainer x={x} y={y} nodeHeight={nodeStyle.height}>
       <pixiContainer x={0} y={height / 2}>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
@@ -50,6 +50,6 @@ export default function IONode({ x, y }: NodeProps) {
           fill: "white",
         }}
       />
-    </pixiContainer>
+    </AlignedPixiContainer>
   );
 }

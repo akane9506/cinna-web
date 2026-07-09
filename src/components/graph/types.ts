@@ -3,17 +3,24 @@ interface Coord {
   y: number;
 }
 
-type NodeProps = {
+interface NodeProps {
   x: number;
   y: number;
-};
+}
 
-type NodeStyle = {
+interface BaseNodeStyle {
   width: number;
-  height: number;
   text: string;
   radius: number;
-  outputPorts: number;
-};
+}
 
-export type { Coord, NodeProps, NodeStyle };
+interface NodeStyle extends BaseNodeStyle {
+  height: number;
+}
+
+interface BranchNodeStyle extends BaseNodeStyle {
+  unitHeight: number;
+  shrink: number;
+}
+
+export type { Coord, NodeProps, NodeStyle, BranchNodeStyle };
