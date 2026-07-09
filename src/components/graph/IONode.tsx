@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { PORT_SIZE } from "@/components/graph/shared";
 import type { NodeStyle, NodeProps } from "@/components/graph/types";
 
-const NodeStyle = {
+const nodeStyle: NodeStyle = {
   width: 160,
   height: 60,
   outputPorts: 1,
@@ -12,7 +12,7 @@ const NodeStyle = {
 };
 
 export default function IONode({ x, y }: NodeProps) {
-  const { width, height, radius, text } = NodeStyle;
+  const { width, height, radius, text } = nodeStyle;
   const drawBody = useCallback(
     (graphics: Graphics) => {
       graphics.clear();
