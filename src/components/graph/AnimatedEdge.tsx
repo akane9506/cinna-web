@@ -1,16 +1,12 @@
-import { Graphics, GraphicsPath, Point } from "pixi.js";
-import { useCallback, useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { useCallback, useRef } from "react";
+import { type Graphics, GraphicsPath } from "pixi.js";
+import type { Coord } from "@/components/graph/types";
 
 type AnimatedEdgeProps = {
-  start: Point;
-  end: Point;
-};
-
-type Coord = {
-  x: number;
-  y: number;
+  start: Coord;
+  end: Coord;
 };
 
 type BezierPoints = {
@@ -23,7 +19,9 @@ type BezierPoints = {
 export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
   const graphicRef = useRef<Graphics>(null);
   const draw = useCallback((graphics: Graphics) => {
-    graphicRef.current = graphics;
+    if (!graphicRef.current) {
+      graphicRef.current = graphics;
+    }
   }, []);
 
   useGSAP(
@@ -40,7 +38,7 @@ export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
       gsap.to(state, {
         progress: 1,
         duration: 2,
-        ease: "power2.out",
+        ease: "power3.inOut",
         onUpdate: render,
         onComplete: () => {
           state.progress = 1;
@@ -54,17 +52,20 @@ export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
   return <pixiGraphics draw={draw} />;
 }
 
-function drawEdge(graphics: Graphics, start: Point, end: Point, progress: number) {
+// Draw Pixi Edge
+function drawEdge(graphics: Graphics, start: Coord, end: Coord, progress: number) {
   const path = createAnimatedEdgePath(start, end, progress);
   graphics.clear().path(path).stroke({
     color: "coral",
-    width: 5,
+    cap: "round",
+    width: 8,
   });
 }
 
+// Create the in-progress sub-Bezier curve, progress = [0.0, 1.0]
 function createAnimatedEdgePath(
-  start: Point,
-  end: Point,
+  start: Coord,
+  end: Coord,
   progress: number,
 ): GraphicsPath {
   const path = new GraphicsPath();
@@ -84,7 +85,8 @@ function createAnimatedEdgePath(
   return path;
 }
 
-function getBezierPoints(start: Point, end: Point): BezierPoints {
+// Get Bezier points for the complete, untrimmed curve
+function getBezierPoints(start: Coord, end: Coord): BezierPoints {
   const distance = Math.abs(end.x - start.x);
   const offset = Math.max(40, distance * 0.8);
   const p0: Coord = { x: start.x, y: start.y };
@@ -94,6 +96,7 @@ function getBezierPoints(start: Point, end: Point): BezierPoints {
   return { bStart: p0, c1: p1, c2: p2, bEnd: p3 };
 }
 
+// De Casteljau subdivision to split a cubic Bezier curve at t
 function splitCubicBezier(
   p0: Coord,
   p1: Coord,
@@ -112,6 +115,7 @@ function splitCubicBezier(
   return { bStart: p0, c1: p01, c2: p012, bEnd: p0123 };
 }
 
+// find the in-between coord based on the parameter t = [0.0, 1.0]
 function lerpPoints(a: Coord, b: Coord, t: number): Coord {
   return {
     x: a.x + (b.x - a.x) * t,

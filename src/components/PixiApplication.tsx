@@ -1,10 +1,14 @@
-import { Application } from "@pixi/react";
-import "./pixi";
-import Node from "./graph/Node";
+import "@/components/graph/pixi";
+import gsap from "gsap";
 import { useRef } from "react";
-import Edge from "./graph/Edge";
-import { Point } from "pixi.js";
-import AnimatedEdge from "./graph/AnimatedEdge";
+import { Application } from "@pixi/react";
+import { useGSAP } from "@gsap/react";
+import IONode from "@/components/graph/IONode";
+import ChatNode from "@/components/graph/ChatNode";
+// import Edge from "@/components/graph/Edge";
+// import AnimatedEdge from "@/components/graph/AnimatedEdge";
+
+gsap.registerPlugin(useGSAP);
 
 export default function PixiApplication() {
   const canvasParentRef = useRef<HTMLDivElement>(null);
@@ -18,10 +22,10 @@ export default function PixiApplication() {
         autoDensity
         resolution={window.devicePixelRatio}
       >
-        <Edge start={new Point(300, 100 + 70)} end={new Point(500, 320 + 70)} />
-        <AnimatedEdge start={new Point(300, 100 + 70)} end={new Point(500, 320 + 70)} />
-        <Node x={100} y={100} nodeType="IO" />
-        <Node x={500} y={320} nodeType="IO" />
+        {/*<Edge start={{x: 300, y: 100 + 70}} end={{x: 500, y: 320 + 70}} />*/}
+        {/*<AnimatedEdge start={{x: 300, y: 100 + 70}} end={{x: 500, y: 320 + 70}} />*/}
+        <IONode x={100} y={100} />
+        <ChatNode x={400} y={100} />
       </Application>
     </div>
   );
