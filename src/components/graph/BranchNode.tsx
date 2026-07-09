@@ -37,11 +37,10 @@ export default function BranchNode({ x, y, branches }: BranchNodeProps) {
           ],
           radius,
         )
-        // .roundRect(0, 0, width, totalHeight, radius)
         .fill({ color: "coral" })
         .stroke({ width: 2 });
     },
-    [totalHeight, radius, width],
+    [totalHeight, radius, width, shrinkX, shrinkY],
   );
 
   const drawPorts = useCallback(
