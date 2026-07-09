@@ -1,9 +1,10 @@
-import { GraphicsPath, type Graphics, type Point } from "pixi.js";
 import { useCallback, useMemo } from "react";
+import { GraphicsPath, type Graphics } from "pixi.js";
+import type { Coord } from "@/components/graph/types";
 
 type EdgeProps = {
-  start: Point;
-  end: Point;
+  start: Coord;
+  end: Coord;
 };
 
 export default function Edge({ start, end }: EdgeProps) {
@@ -17,7 +18,7 @@ export default function Edge({ start, end }: EdgeProps) {
   return <pixiGraphics draw={draw} />;
 }
 
-function createEdgePath(start: Point, end: Point, offset: number = 160): GraphicsPath {
+function createEdgePath(start: Coord, end: Coord, offset: number = 160): GraphicsPath {
   const path = new GraphicsPath();
   path.moveTo(start.x, start.y);
   path.bezierCurveTo(start.x + offset, start.y, end.x - offset, end.y, end.x, end.y);
