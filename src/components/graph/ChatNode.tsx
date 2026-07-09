@@ -3,6 +3,7 @@ import type { NodeProps } from "./types";
 import { DEG_TO_RAD, Graphics, type Container } from "pixi.js";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { yAlign } from "./shared";
 
 const PORT_SIZE = 10;
 
@@ -140,7 +141,7 @@ export default function ChatNode({ x, y }: NodeProps) {
   }, []);
 
   return (
-    <pixiContainer ref={containerRef} x={x} y={y}>
+    <pixiContainer ref={containerRef} x={x} y={yAlign(y, nodeStyle.height)}>
       {/* MCP tag */}
       <pixiContainer
         x={mcpStyle.x}
