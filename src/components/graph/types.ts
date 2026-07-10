@@ -18,10 +18,4 @@ interface NodeStyle extends BaseNodeStyle {
   height: number;
 }
 
-interface BranchNodeStyle extends BaseNodeStyle {
-  unitHeight: number;
-  shrinkX: number;
-  shrinkY: number;
-}
-
-export type { Coord, NodeProps, NodeStyle, BranchNodeStyle };
+export type { Coord, NodeProps, NodeStyle, BaseNodeStyle };

@@ -1,16 +1,14 @@
 import { useCallback, useRef } from "react";
-import type { NodeProps } from "./types";
-import { DEG_TO_RAD, Graphics, type Container } from "pixi.js";
 import gsap from "gsap";
+import { DEG_TO_RAD, Graphics, type Container } from "pixi.js";
 import { useGSAP } from "@gsap/react";
-import { yAlign } from "./shared";
+import { PORT_SIZE } from "@/components/graph/shared";
+import type { NodeProps, NodeStyle } from "@/components/graph/types";
+import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
-const PORT_SIZE = 10;
-
-const nodeStyle = {
+const nodeStyle: NodeStyle = {
   width: 160,
   height: 120,
-  outputPorts: 1,
   radius: 24,
   text: "Chat Model",
 };
@@ -25,6 +23,7 @@ const mcpStyle = {
   rotation: 10 * DEG_TO_RAD,
   hoverX: 110,
   hoverY: -25,
+  text: "MCP",
   hoverRotation: -26 * DEG_TO_RAD,
 };
 
@@ -141,7 +140,7 @@ export default function ChatNode({ x, y }: NodeProps) {
   }, []);
 
   return (
-    <pixiContainer ref={containerRef} x={x} y={yAlign(y, nodeStyle.height)}>
+    <AlignedPixiContainer ref={containerRef} x={x} y={y} nodeHeight={nodeStyle.height}>
       {/* MCP tag */}
       <pixiContainer
         x={mcpStyle.x}
@@ -151,7 +150,7 @@ export default function ChatNode({ x, y }: NodeProps) {
       >
         <pixiGraphics draw={drawMCP} />
         <pixiText
-          text={"MCP"}
+          text={mcpStyle.text}
           x={(mcpStyle.width + mcpStyle.extend) / 2}
           y={mcpStyle.height / 2}
           anchor={0.5}
@@ -203,6 +202,6 @@ export default function ChatNode({ x, y }: NodeProps) {
           }}
         />
       </pixiContainer>
-    </pixiContainer>
+    </AlignedPixiContainer>
   );
 }

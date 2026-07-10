@@ -1,0 +1,179 @@
+import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
+import type { NodeProps, NodeStyle } from "@/components/graph/types";
+import { Container, Point, type Graphics } from "pixi.js";
+import { useCallback, useRef } from "react";
+import { PORT_SIZE } from "./shared";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+
+const nodeStyle: NodeStyle = {
+  width: 140,
+  height: 90,
+  radius: 24,
+  text: "JSON Model",
+};
+
+const gearStyle = {
+  x: 40,
+  y: 25,
+  scale: 1.0,
+  hoverX: 90,
+  hoverY: 10,
+  hoverScale: 1.1,
+  innerRadius: 38,
+  outerRadius: 55,
+  numTeeth: 8,
+  topLandOffset: 0.05,
+  cornerRadius: 5,
+  duration: 0.35,
+};
+
+export default function JSONNode({ x, y }: NodeProps) {
+  const { width, height, text, radius } = nodeStyle;
+  const gearRef = useRef<Container>(null);
+  const { contextSafe } = useGSAP({ scope: gearRef });
+
+  const handleNodeHoverIn = () => {
+    contextSafe(() => {
+      if (!gearRef.current) return;
+      const { hoverX, hoverY, hoverScale, duration } = gearStyle;
+      gsap.killTweensOf(gearRef.current, "rotation");
+      gsap.to(gearRef.current, {
+        rotation: `+=${Math.PI * 2}`,
+        duration: 2,
+        ease: "none",
+        repeat: -1,
+      });
+      gsap.to(gearRef.current, {
+        x: hoverX,
+        y: hoverY,
+        duration,
+        ease: "elastic.out",
+      });
+      gsap.to(gearRef.current.scale, {
+        x: hoverScale,
+        y: hoverScale,
+        duration,
+        ease: "elastic.out",
+      });
+    })();
+  };
+
+  const handleNodeHoverOut = () => {
+    contextSafe(() => {
+      if (!gearRef.current) return;
+      const { x, y, scale, duration } = gearStyle;
+      gsap.killTweensOf(gearRef.current, "rotation");
+      gsap.to(gearRef.current, {
+        x,
+        y,
+        duration,
+        ease: "elastic.out",
+      });
+      gsap.to(gearRef.current.scale, {
+        x: scale,
+        y: scale,
+        duration,
+        ease: "elastic.out",
+      });
+    })();
+  };
+
+  const drawNode = useCallback(
+    (graphics: Graphics) => {
+      graphics.clear();
+      graphics
+        .roundRect(0, 0, width, height, radius)
+        .fill({ color: "coral" })
+        .stroke({ width: 2 });
+    },
+    [width, height, radius],
+  );
+
+  const drawPorts = useCallback(
+    (graphics: Graphics) => {
+      graphics.clear();
+      graphics.circle(0, 0, PORT_SIZE).fill("white");
+      graphics.circle(width, 0, PORT_SIZE).fill("white");
+    },
+    [width],
+  );
+
+  const drawGear = useCallback((graphics: Graphics) => {
+    const { innerRadius, outerRadius, topLandOffset, numTeeth, cornerRadius } = gearStyle;
+    graphics.clear();
+    graphics
+      .roundShape(
+        getGearPoints(innerRadius, outerRadius, numTeeth, topLandOffset),
+        cornerRadius,
+      )
+      .fill({ color: "coral" })
+      .stroke({ width: 2 });
+  }, []);
+
+  return (
+    <AlignedPixiContainer
+      x={x}
+      y={y}
+      nodeHeight={height}
+      eventMode="static"
+      cursor="pointer"
+      onPointerOver={handleNodeHoverIn}
+      onPointerOut={handleNodeHoverOut}
+    >
+      {/* Gear */}
+      <pixiContainer
+        ref={gearRef}
+        x={gearStyle.x}
+        y={gearStyle.y}
+        scale={gearStyle.scale}
+      >
+        <pixiGraphics draw={drawGear} />
+      </pixiContainer>
+
+      <pixiContainer x={0} y={height / 2}>
+        <pixiGraphics draw={drawPorts} />
+      </pixiContainer>
+      <pixiGraphics draw={drawNode} />
+      <pixiText
+        text={text}
+        x={width / 2}
+        y={height / 2}
+        anchor={0.5}
+        style={{ fontSize: 19, fill: "white" }}
+      />
+    </AlignedPixiContainer>
+  );
+}
+
+function getGearPoints(innerR: number, outerR: number, numTeeth: number, offset: number) {
+  const clampedNumTeeth = Math.min(8, Math.max(4, numTeeth));
+  const radStep = (Math.PI * 2) / (clampedNumTeeth * 2);
+  const points: Point[] = [];
+  for (let i = 0; i < clampedNumTeeth * 2; i++) {
+    if (i % 2 == 0) {
+      const outerPt = getPolarCoord(i * radStep, offset, outerR, true);
+      const innerPt = getPolarCoord(i * radStep, offset, innerR, false);
+      points.push(outerPt);
+      points.push(innerPt);
+    } else {
+      const outerPt = getPolarCoord(i * radStep, offset, outerR, false);
+      const innerPt = getPolarCoord(i * radStep, offset, innerR, true);
+      points.push(innerPt);
+      points.push(outerPt);
+    }
+  }
+  return points;
+}
+
+function getPolarCoord(
+  radiance: number,
+  teethOffset: number,
+  radius: number,
+  innerOffset: boolean,
+) {
+  return new Point(
+    Math.cos(radiance + teethOffset * (innerOffset ? -1 : 1)) * radius,
+    Math.sin(radiance + teethOffset * (innerOffset ? -1 : 1)) * radius,
+  );
+}

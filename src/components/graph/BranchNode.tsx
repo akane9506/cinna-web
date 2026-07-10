@@ -1,11 +1,18 @@
 import { useCallback } from "react";
 import { DEG_TO_RAD, type Graphics } from "pixi.js";
-import type { BranchNodeStyle, NodeProps } from "@/components/graph/types";
+import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
-import { PORT_SIZE } from "./shared";
+import { PORT_SIZE } from "@/components/graph/shared";
+import type { BaseNodeStyle } from "@/components/graph/types";
 
 interface BranchNodeProps extends NodeProps {
   branches: number;
+}
+
+interface BranchNodeStyle extends BaseNodeStyle {
+  unitHeight: number;
+  shrinkX: number;
+  shrinkY: number;
 }
 
 const nodeStyle: BranchNodeStyle = {
