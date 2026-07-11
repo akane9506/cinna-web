@@ -8,9 +8,9 @@ import gsap from "gsap";
 
 const nodeStyle: NodeStyle = {
   width: 140,
-  height: 90,
-  radius: 24,
-  text: "JSON Model",
+  height: 80,
+  radius: 12,
+  text: "Lambdas",
 };
 
 const gearStyle = {
@@ -28,7 +28,7 @@ const gearStyle = {
   duration: 0.35,
 };
 
-export default function JSONNode({ x, y }: NodeProps) {
+export default function LambdaNode({ x, y }: NodeProps) {
   const { width, height, text, radius } = nodeStyle;
   const gearRef = useRef<Container>(null);
   const { contextSafe } = useGSAP({ scope: gearRef });
@@ -48,13 +48,13 @@ export default function JSONNode({ x, y }: NodeProps) {
         x: hoverX,
         y: hoverY,
         duration,
-        ease: "elastic.out",
+        ease: "power2.out",
       });
       gsap.to(gearRef.current.scale, {
         x: hoverScale,
         y: hoverScale,
         duration,
-        ease: "elastic.out",
+        ease: "power2.out",
       });
     })();
   };
@@ -68,13 +68,13 @@ export default function JSONNode({ x, y }: NodeProps) {
         x,
         y,
         duration,
-        ease: "elastic.out",
+        ease: "power2.out",
       });
       gsap.to(gearRef.current.scale, {
         x: scale,
         y: scale,
         duration,
-        ease: "elastic.out",
+        ease: "power2.out",
       });
     })();
   };
@@ -108,7 +108,11 @@ export default function JSONNode({ x, y }: NodeProps) {
         cornerRadius,
       )
       .fill({ color: "coral" })
-      .stroke({ width: 2 });
+      .stroke({ width: 2 })
+      .circle(0, 0, 20) // the first cut removes the stroke
+      .cut()
+      .circle(0, 0, 20) // the second cut removes the center
+      .cut();
   }, []);
 
   return (

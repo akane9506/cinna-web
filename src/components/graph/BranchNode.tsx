@@ -20,7 +20,7 @@ const nodeStyle: BranchNodeStyle = {
   shrinkX: 40,
   shrinkY: 40,
   unitHeight: 50,
-  radius: 16,
+  radius: 12,
   text: "Branches",
 };
 

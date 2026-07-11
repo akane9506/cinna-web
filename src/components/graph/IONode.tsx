@@ -7,7 +7,7 @@ import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 const nodeStyle: NodeStyle = {
   width: 160,
   height: 60,
-  radius: 20,
+  radius: 12,
   text: "I/O Processor",
 };
 

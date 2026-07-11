@@ -9,7 +9,13 @@ type AlignedPixiContainerProps = {
 export default function AlignedPixiContainer(props: AlignedPixiContainerProps) {
   const { x, y, nodeHeight, children, ...restProps } = props;
   return (
-    <pixiContainer x={x} y={yAlign(y, nodeHeight)} {...restProps}>
+    <pixiContainer
+      x={x}
+      y={yAlign(y, nodeHeight)}
+      cursor="pointer"
+      eventMode="static"
+      {...restProps}
+    >
       {children}
     </pixiContainer>
   );
