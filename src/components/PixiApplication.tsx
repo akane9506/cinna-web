@@ -6,7 +6,9 @@ import { useGSAP } from "@gsap/react";
 import IONode from "@/components/graph/IONode";
 import ChatNode from "@/components/graph/ChatNode";
 import BranchNode from "./graph/BranchNode";
-import JSONNode from "./graph/JSONNode";
+import LambdaNode from "./graph/LambdaNode";
+import StateNode from "./graph/StateNode";
+import WorkflowNode from "./graph/WorkflowNode";
 // import Edge from "@/components/graph/Edge";
 // import AnimatedEdge from "@/components/graph/AnimatedEdge";
 
@@ -29,7 +31,9 @@ export default function PixiApplication() {
         <IONode x={100} y={200} />
         <ChatNode x={400} y={200} />
         <BranchNode x={700} y={200} branches={2} />
-        <JSONNode x={960} y={200} />
+        <LambdaNode x={960} y={200} />
+        <StateNode x={100} y={400} />
+        <WorkflowNode x={400} y={400} />
       </Application>
     </div>
   );

@@ -7,9 +7,9 @@ import type { NodeProps, NodeStyle } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
 const nodeStyle: NodeStyle = {
-  width: 160,
-  height: 120,
-  radius: 24,
+  width: 140,
+  height: 110,
+  radius: 12,
   text: "Chat Model",
 };
 
@@ -32,8 +32,8 @@ const toolsStyle = {
   halfHeight: 24,
   extend: 16,
   radius: 12,
-  x: 40,
-  y: 130,
+  x: 30,
+  y: 120,
   rotation: -220 * DEG_TO_RAD,
   text: "Tools",
   hoverRotation: -20 * DEG_TO_RAD,
