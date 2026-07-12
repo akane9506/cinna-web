@@ -126,10 +126,10 @@ export default function WorkflowNode({ x, y }: NodeProps) {
     <AlignedPixiContainer ref={containerRef} x={x} y={y} nodeHeight={height}>
       {/* Sub nodes */}
       <pixiContainer ref={subnodesContainerRef} x={width / 2}>
-        {Array.from({ length: 3 }, (index) => index).map((idx) => {
+        {Array.from({ length: 3 }, (_, index) => index).map((idx) => {
           return (
             <pixiGraphics
-              key={`subnode-${idx}`}
+              key={`subnode-${idx}`} // actually we can ignore the key; it is not even a DOM
               x={0}
               y={height / 2}
               draw={drawSubNode}
