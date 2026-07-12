@@ -9,6 +9,7 @@ import BranchNode from "./graph/BranchNode";
 import LambdaNode from "./graph/LambdaNode";
 import StateNode from "./graph/StateNode";
 import WorkflowNode from "./graph/WorkflowNode";
+import JsonNode from "./graph/JsonNode";
 // import Edge from "@/components/graph/Edge";
 // import AnimatedEdge from "@/components/graph/AnimatedEdge";
 
@@ -34,6 +35,7 @@ export default function PixiApplication() {
         <LambdaNode x={960} y={200} />
         <StateNode x={100} y={400} />
         <WorkflowNode x={400} y={400} />
+        <JsonNode x={700} y={400} />
       </Application>
     </div>
   );

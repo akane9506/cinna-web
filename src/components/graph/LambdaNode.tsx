@@ -1,15 +1,16 @@
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
-import type { NodeProps, NodeStyle } from "@/components/graph/types";
+import type { NodeProps } from "@/components/graph/types";
 import { Container, Point, type Graphics } from "pixi.js";
 import { useCallback, useRef } from "react";
 import { PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
-const nodeStyle: NodeStyle = {
+const nodeStyle = {
   width: 140,
   height: 80,
   radius: 12,
+  cornerOffset: 30,
   text: "Lambdas",
 };
 
@@ -20,8 +21,8 @@ const gearStyle = {
   hoverX: 90,
   hoverY: 10,
   hoverScale: 1.1,
-  innerRadius: 38,
-  outerRadius: 55,
+  innerRadius: 35,
+  outerRadius: 50,
   numTeeth: 8,
   topLandOffset: 0.05,
   cornerRadius: 5,
@@ -29,7 +30,7 @@ const gearStyle = {
 };
 
 export default function LambdaNode({ x, y }: NodeProps) {
-  const { width, height, text, radius } = nodeStyle;
+  const { width, height, text, radius, cornerOffset } = nodeStyle;
   const gearRef = useRef<Container>(null);
   const { contextSafe } = useGSAP({ scope: gearRef });
 
@@ -83,11 +84,11 @@ export default function LambdaNode({ x, y }: NodeProps) {
     (graphics: Graphics) => {
       graphics.clear();
       graphics
-        .roundRect(0, 0, width, height, radius)
+        .roundShape(getCornerPoints(width, height, cornerOffset), radius)
         .fill({ color: "coral" })
         .stroke({ width: 2 });
     },
-    [width, height, radius],
+    [width, height, radius, cornerOffset],
   );
 
   const drawPorts = useCallback(
@@ -122,8 +123,6 @@ export default function LambdaNode({ x, y }: NodeProps) {
       nodeHeight={height}
       eventMode="static"
       cursor="pointer"
-      onPointerOver={handleNodeHoverIn}
-      onPointerOut={handleNodeHoverOut}
     >
       {/* Gear */}
       <pixiContainer
@@ -138,14 +137,21 @@ export default function LambdaNode({ x, y }: NodeProps) {
       <pixiContainer x={0} y={height / 2}>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
-      <pixiGraphics draw={drawNode} />
-      <pixiText
-        text={text}
-        x={width / 2}
-        y={height / 2}
-        anchor={0.5}
-        style={{ fontSize: 19, fill: "white" }}
-      />
+      <pixiContainer
+        eventMode="static"
+        cursor="pointer"
+        onPointerOver={handleNodeHoverIn}
+        onPointerOut={handleNodeHoverOut}
+      >
+        <pixiGraphics draw={drawNode} />
+        <pixiText
+          text={text}
+          x={width / 2}
+          y={height / 2}
+          anchor={0.5}
+          style={{ fontSize: 19, fill: "white" }}
+        />
+      </pixiContainer>
     </AlignedPixiContainer>
   );
 }
@@ -175,9 +181,19 @@ function getPolarCoord(
   teethOffset: number,
   radius: number,
   innerOffset: boolean,
-) {
+): Point {
   return new Point(
     Math.cos(radiance + teethOffset * (innerOffset ? -1 : 1)) * radius,
     Math.sin(radiance + teethOffset * (innerOffset ? -1 : 1)) * radius,
   );
+}
+
+function getCornerPoints(width: number, height: number, offset: number): Point[] {
+  const ptA = new Point(offset, 0);
+  const ptB = new Point(width - offset, 0);
+  const ptC = new Point(width, height / 2);
+  const ptD = new Point(width - offset, height);
+  const ptE = new Point(offset, height);
+  const ptF = new Point(0, height / 2);
+  return [ptA, ptB, ptC, ptD, ptE, ptF];
 }
