@@ -1,25 +1,43 @@
-import { useCallback, useRef } from "react";
-import AlignedPixiContainer from "./AlignedPixiContainer";
-import type { NodeProps } from "./types";
-import { Container, Point, type Graphics } from "pixi.js";
-import { PORT_SIZE } from "./shared";
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { useCallback, useRef } from "react";
+import { Container, Point, type Graphics } from "pixi.js";
+import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
+import type { NodeProps } from "@/components/graph/types";
+import { PORT_SIZE } from "@/components/graph/shared";
 
 const nodeStyle = {
-  width: 180,
-  height: 130,
+  width: 170,
+  height: 100,
   radius: 12,
   text: "Workflow",
   hoverScale: 1.2,
 };
+
+const subNodeStyle = {
+  width: 70,
+  height: 40,
+  radius: 6,
+  hoverOffsetX: 80,
+  hoverOffsetY: 145,
+  hoverOffsetYCenter: 155,
+};
+
 export default function WorkflowNode({ x, y }: NodeProps) {
   const { width, radius, text, height } = nodeStyle;
 
   const containerRef = useRef<Container>(null);
   const nodeShapeRef = useRef<Graphics>(null);
+  const subnodesContainerRef = useRef<Container>(null);
 
   const { contextSafe } = useGSAP({ scope: containerRef });
+
+  const redrawSubNodes = () => {
+    if (!subnodesContainerRef.current) return;
+    subnodesContainerRef.current.children.map((node) => {
+      drawSubNode(node as Graphics);
+    });
+  };
 
   const handleNodeHoverIn = () => {
     contextSafe(() => {
@@ -30,6 +48,16 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         y: hoverScale,
         duration: 0.35,
         ease: "elastic.out",
+      });
+
+      if (!subnodesContainerRef.current) return;
+      const { hoverOffsetX, hoverOffsetY, hoverOffsetYCenter } = subNodeStyle;
+      gsap.to(subnodesContainerRef.current.children, {
+        x: (index) => [0, hoverOffsetX, -hoverOffsetX][index],
+        y: (index) => [hoverOffsetYCenter, hoverOffsetY, hoverOffsetY][index],
+        duration: 0.35,
+        ease: "elastic.out",
+        onUpdate: redrawSubNodes,
       });
     })();
   };
@@ -42,6 +70,14 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         y: 1.0,
         duration: 0.35,
         ease: "elastic.out",
+      });
+      if (!subnodesContainerRef.current) return;
+      gsap.to(subnodesContainerRef.current.children, {
+        x: 0,
+        y: height / 2,
+        duration: 0.35,
+        ease: "power2.out",
+        onUpdate: redrawSubNodes,
       });
     })();
   };
@@ -57,6 +93,26 @@ export default function WorkflowNode({ x, y }: NodeProps) {
     [width, height, radius],
   );
 
+  const drawSubNode = useCallback((graphics: Graphics) => {
+    const { width, height, radius } = subNodeStyle;
+    graphics.clear();
+    const centeredDiamond = getDiamondCorners(width, height);
+    centeredDiamond.forEach((point) => (point.x -= width / 2));
+    const position = graphics.position;
+    graphics.roundShape(centeredDiamond, radius).fill("coral").stroke({ width: 2 });
+    graphics
+      .moveTo(-position.x, -position.y / 2)
+      .bezierCurveTo(
+        -position.x,
+        -position.y / 2 + subNodeStyle.hoverOffsetY / 3,
+        centeredDiamond[1].x,
+        centeredDiamond[1].y - subNodeStyle.hoverOffsetY / 3,
+        centeredDiamond[1].x,
+        centeredDiamond[1].y,
+      )
+      .stroke({ width: 2 });
+  }, []);
+
   const drawPorts = useCallback(
     (graphics: Graphics) => {
       graphics.clear();
@@ -67,28 +123,42 @@ export default function WorkflowNode({ x, y }: NodeProps) {
   );
 
   return (
-    <AlignedPixiContainer
-      ref={containerRef}
-      x={x}
-      y={y}
-      nodeHeight={height}
-      eventMode="static"
-      onPointerOver={handleNodeHoverIn}
-      onPointerOut={handleNodeHoverOut}
-    >
+    <AlignedPixiContainer ref={containerRef} x={x} y={y} nodeHeight={height}>
+      {/* Sub nodes */}
+      <pixiContainer ref={subnodesContainerRef} x={width / 2}>
+        {Array.from({ length: 3 }, (_, index) => index).map((idx) => {
+          return (
+            <pixiGraphics
+              key={`subnode-${idx}`} // actually we can ignore the key; it is not even a DOM
+              x={0}
+              y={height / 2}
+              draw={drawSubNode}
+            />
+          );
+        })}
+      </pixiContainer>
+      {/* Ports */}
       <pixiContainer x={0} y={height / 2}>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
-      <pixiContainer x={0} y={height / 2}>
-        <pixiGraphics ref={nodeShapeRef} draw={drawNode} />
-      </pixiContainer>
-      <pixiText
-        text={text}
-        x={width / 2}
+      {/* Node body */}
+      <pixiContainer
+        x={0}
         y={height / 2}
-        anchor={0.5}
-        style={{ fontSize: 19, fill: "white" }}
-      />
+        eventMode="static"
+        cursor="pointer"
+        onPointerOver={handleNodeHoverIn}
+        onPointerOut={handleNodeHoverOut}
+      >
+        <pixiGraphics ref={nodeShapeRef} draw={drawNode} />
+        <pixiText
+          text={text}
+          x={width / 2}
+          y={0}
+          anchor={0.5}
+          style={{ fontSize: 19, fill: "white" }}
+        />
+      </pixiContainer>
     </AlignedPixiContainer>
   );
 }
