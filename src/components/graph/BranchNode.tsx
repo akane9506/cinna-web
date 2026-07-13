@@ -2,25 +2,20 @@ import { useCallback } from "react";
 import { DEG_TO_RAD, type Graphics } from "pixi.js";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
-import { PORT_SIZE } from "@/components/graph/shared";
-import type { BaseNodeStyle } from "@/components/graph/types";
+import { NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
 
 interface BranchNodeProps extends NodeProps {
   branches: number;
 }
 
-interface BranchNodeStyle extends BaseNodeStyle {
-  unitHeight: number;
-  shrinkX: number;
-  shrinkY: number;
-}
+const { w, h, r } = NODE_SIZES["branch"];
 
-const nodeStyle: BranchNodeStyle = {
-  width: 80,
+const nodeStyle = {
+  width: w,
   shrinkX: 40,
   shrinkY: 40,
-  unitHeight: 50,
-  radius: 12,
+  unitHeight: h,
+  radius: r,
   text: "Branches",
 };
 

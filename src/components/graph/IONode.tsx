@@ -1,10 +1,10 @@
 import { Graphics } from "pixi.js";
 import { useCallback } from "react";
 import { PORT_SIZE } from "@/components/graph/shared";
-import type { NodeStyle, NodeProps } from "@/components/graph/types";
+import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
-const nodeStyle: NodeStyle = {
+const nodeStyle = {
   width: 160,
   height: 60,
   radius: 12,

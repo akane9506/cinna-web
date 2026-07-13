@@ -1,17 +1,19 @@
 import "@/components/graph/pixi";
 import gsap from "gsap";
-import { useRef } from "react";
+import { useRef, type ReactElement } from "react";
 import { Application } from "@pixi/react";
 import { useGSAP } from "@gsap/react";
 import IONode from "@/components/graph/IONode";
 import ChatNode from "@/components/graph/ChatNode";
-import BranchNode from "./graph/BranchNode";
-import LambdaNode from "./graph/LambdaNode";
-import StateNode from "./graph/StateNode";
-import WorkflowNode from "./graph/WorkflowNode";
-import JsonNode from "./graph/JsonNode";
+import BranchNode from "@/components/graph/BranchNode";
+import LambdaNode from "@/components/graph/LambdaNode";
+import StateNode from "@/components/graph/StateNode";
+import WorkflowNode from "@/components/graph/WorkflowNode";
+import JsonNode from "@/components/graph/JsonNode";
+import Edge from "@/components/graph/Edge";
 // import Edge from "@/components/graph/Edge";
 // import AnimatedEdge from "@/components/graph/AnimatedEdge";
+import { nodeRenderers, type NodeRenderer } from "@/components/graph/graph";
 
 gsap.registerPlugin(useGSAP);
 
@@ -27,16 +29,35 @@ export default function PixiApplication() {
         autoDensity
         resolution={window.devicePixelRatio}
       >
-        {/*<Edge start={{x: 300, y: 100 + 70}} end={{x: 500, y: 320 + 70}} />*/}
-        {/*<AnimatedEdge start={{x: 300, y: 100 + 70}} end={{x: 500, y: 320 + 70}} />*/}
-        <IONode x={100} y={200} />
-        <ChatNode x={400} y={200} />
-        <BranchNode x={700} y={200} branches={2} />
-        <LambdaNode x={960} y={200} />
-        <StateNode x={100} y={400} />
-        <WorkflowNode x={400} y={400} />
-        <JsonNode x={700} y={400} />
+        {/* Edges */}
+        <Edge start={{ x: 100 + 160, y: 300 }} end={{ x: 440, y: 200 }} />
+        {/*<AnimatedEdge end={{ x: 100 + 160, y: 300 }} start={{ x: 440, y: 200 }} />*/}
+        <Edge start={{ x: 100 + 160, y: 300 }} end={{ x: 400, y: 420 }} />
+        {/* Nodes */}
+        {nodeRenderers.map((renderer) => renderNode(renderer))}
       </Application>
     </div>
   );
+}
+
+function renderNode(renderer: NodeRenderer): ReactElement {
+  const { id, type, x, y, branches } = renderer;
+  switch (type) {
+    case "io":
+      return <IONode key={id} x={x} y={y} />;
+    case "chat":
+      return <ChatNode key={id} x={x} y={y} />;
+    case "state":
+      return <StateNode key={id} x={x} y={y} />;
+    case "branch":
+      return <BranchNode key={id} x={x} y={y} branches={branches} />;
+    case "json":
+      return <JsonNode key={id} x={x} y={y} />;
+    case "lambda":
+      return <LambdaNode key={id} x={x} y={y} />;
+    case "workflow":
+      return <WorkflowNode key={id} x={x} y={y} />;
+    default:
+      return <></>;
+  }
 }

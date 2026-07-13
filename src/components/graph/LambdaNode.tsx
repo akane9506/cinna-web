@@ -2,14 +2,16 @@ import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
 import { Container, Point, type Graphics } from "pixi.js";
 import { useCallback, useRef } from "react";
-import { PORT_SIZE } from "./shared";
+import { NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
+const { w, h, r } = NODE_SIZES["lambda"];
+
 const nodeStyle = {
-  width: 140,
-  height: 80,
-  radius: 12,
+  width: w,
+  height: h,
+  radius: r,
   cornerOffset: 30,
   text: "Lambdas",
 };

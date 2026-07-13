@@ -1,6 +1,15 @@
+type NodeType = "io" | "chat" | "branch" | "json" | "lambda" | "state" | "workflow";
+
 interface Coord {
   x: number;
   y: number;
+}
+
+interface BezierPoints {
+  bStart: Coord;
+  c1: Coord;
+  c2: Coord;
+  bEnd: Coord;
 }
 
 interface NodeProps {
@@ -18,4 +27,4 @@ interface NodeStyle extends BaseNodeStyle {
   height: number;
 }
 
-export type { Coord, NodeProps, NodeStyle, BaseNodeStyle };
+export type { NodeType, Coord, NodeProps, NodeStyle, BaseNodeStyle, BezierPoints };

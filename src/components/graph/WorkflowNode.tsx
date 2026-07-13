@@ -4,12 +4,14 @@ import { useCallback, useRef } from "react";
 import { Container, Point, type Graphics } from "pixi.js";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
-import { PORT_SIZE } from "@/components/graph/shared";
+import { NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+
+const { w, h, r } = NODE_SIZES["workflow"];
 
 const nodeStyle = {
-  width: 170,
-  height: 100,
-  radius: 12,
+  width: w,
+  height: h,
+  radius: r,
   text: "Workflow",
   hoverScale: 1.2,
 };
