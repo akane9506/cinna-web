@@ -2,10 +2,12 @@ import { useCallback } from "react";
 import AlignedPixiContainer from "./AlignedPixiContainer";
 import type { NodeProps } from "./types";
 import type { Graphics } from "pixi.js";
-import { PORT_SIZE } from "./shared";
+import { NODE_SIZES, PORT_SIZE } from "./shared";
+
+const { w } = NODE_SIZES["state"];
 
 const nodeStyle = {
-  diameter: 90,
+  diameter: w,
   text: "State",
 };
 

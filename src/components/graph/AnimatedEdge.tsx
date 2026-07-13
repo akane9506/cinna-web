@@ -2,18 +2,12 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { useCallback, useRef } from "react";
 import { type Graphics, GraphicsPath } from "pixi.js";
-import type { Coord } from "@/components/graph/types";
+import type { Coord, BezierPoints } from "@/components/graph/types";
+import { getBezierPoints } from "@/components/graph/shared";
 
 type AnimatedEdgeProps = {
   start: Coord;
   end: Coord;
-};
-
-type BezierPoints = {
-  bStart: Coord;
-  c1: Coord;
-  c2: Coord;
-  bEnd: Coord;
 };
 
 export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
@@ -37,7 +31,7 @@ export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
       render();
       gsap.to(state, {
         progress: 1,
-        duration: 2,
+        duration: 1,
         ease: "power3.inOut",
         onUpdate: render,
         onComplete: () => {
@@ -83,17 +77,6 @@ function createAnimatedEdgePath(
     path.bezierCurveTo(cc1.x, cc1.y, cc2.x, cc2.y, cbEnd.x, cbEnd.y);
   }
   return path;
-}
-
-// Get Bezier points for the complete, untrimmed curve
-function getBezierPoints(start: Coord, end: Coord): BezierPoints {
-  const distance = Math.abs(end.x - start.x);
-  const offset = Math.max(40, distance * 0.8);
-  const p0: Coord = { x: start.x, y: start.y };
-  const p1: Coord = { x: start.x + offset, y: start.y };
-  const p2: Coord = { x: end.x - offset, y: end.y };
-  const p3: Coord = { x: end.x, y: end.y };
-  return { bStart: p0, c1: p1, c2: p2, bEnd: p3 };
 }
 
 // De Casteljau subdivision to split a cubic Bezier curve at t

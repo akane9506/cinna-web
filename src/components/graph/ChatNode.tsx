@@ -2,14 +2,16 @@ import { useCallback, useRef } from "react";
 import gsap from "gsap";
 import { DEG_TO_RAD, Graphics, type Container } from "pixi.js";
 import { useGSAP } from "@gsap/react";
-import { PORT_SIZE } from "@/components/graph/shared";
-import type { NodeProps, NodeStyle } from "@/components/graph/types";
+import { NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
-const nodeStyle: NodeStyle = {
-  width: 140,
-  height: 110,
-  radius: 12,
+const { w, h, r } = NODE_SIZES["chat"];
+
+const nodeStyle = {
+  width: w,
+  height: h,
+  radius: r,
   text: "Chat Model",
 };
 

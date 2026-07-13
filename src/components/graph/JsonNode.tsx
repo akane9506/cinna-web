@@ -2,14 +2,16 @@ import { useCallback, useRef } from "react";
 import type { NodeProps } from "./types";
 import { Container, Graphics, Point } from "pixi.js";
 import AlignedPixiContainer from "./AlignedPixiContainer";
-import { PORT_SIZE } from "./shared";
+import { NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
+const { w, h, r } = NODE_SIZES["json"];
+
 const nodeStyle = {
-  width: 140,
-  height: 80,
-  radius: 6,
+  width: w,
+  height: h,
+  radius: r,
   xOffset: 12,
   yOffset: 5,
   hoverXOffset: 40,

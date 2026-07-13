@@ -1,7 +1,32 @@
+import type { NodeType, Coord, BezierPoints } from "./types";
+
 const PORT_SIZE = 10;
 
-export const yAlign = (y: number | undefined, nodeHeight: number) => {
+const NODE_SIZES: Record<NodeType, { w: number; h: number; r: number }> = {
+  io: { w: 160, h: 60, r: 12 },
+  chat: { w: 140, h: 110, r: 12 },
+  lambda: { w: 140, h: 80, r: 12 },
+  json: { w: 140, h: 80, r: 6 },
+  workflow: { w: 170, h: 100, r: 12 },
+  state: { w: 90, h: 0, r: 0 }, // for state node, w means diameter
+  branch: { w: 80, h: 50, r: 12 }, // h for branch means unit height
+};
+
+const yAlign = (y: number | undefined, nodeHeight: number) => {
   return (y || 0) - nodeHeight / 2;
 };
 
-export { PORT_SIZE };
+// Get Bezier points for the complete, untrimmed curve
+const getBezierPoints = (start: Coord, end: Coord): BezierPoints => {
+  const dir = end.x > start.x ? 1 : -1;
+  const distance = Math.abs(end.x - start.x);
+  const offset = Math.max(40, distance * 0.8) * dir;
+  const p0: Coord = { x: start.x, y: start.y };
+  const p1: Coord = { x: start.x + offset, y: start.y };
+  const p2: Coord = { x: end.x - offset, y: end.y };
+  const p3: Coord = { x: end.x, y: end.y };
+  return { bStart: p0, c1: p1, c2: p2, bEnd: p3 };
+};
+
+export { PORT_SIZE, NODE_SIZES };
+export { yAlign, getBezierPoints };
