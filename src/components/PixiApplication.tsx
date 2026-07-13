@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { useRef, type ReactElement } from "react";
 import { Application } from "@pixi/react";
 import { useGSAP } from "@gsap/react";
+import { nodeRenderers, nodeEdges, type NodeRenderer } from "@/components/graph/graph";
 import IONode from "@/components/graph/IONode";
 import ChatNode from "@/components/graph/ChatNode";
 import BranchNode from "@/components/graph/BranchNode";
@@ -11,9 +12,6 @@ import StateNode from "@/components/graph/StateNode";
 import WorkflowNode from "@/components/graph/WorkflowNode";
 import JsonNode from "@/components/graph/JsonNode";
 import Edge from "@/components/graph/Edge";
-// import Edge from "@/components/graph/Edge";
-// import AnimatedEdge from "@/components/graph/AnimatedEdge";
-import { nodeRenderers, type NodeRenderer } from "@/components/graph/graph";
 
 gsap.registerPlugin(useGSAP);
 
@@ -30,9 +28,9 @@ export default function PixiApplication() {
         resolution={window.devicePixelRatio}
       >
         {/* Edges */}
-        <Edge start={{ x: 100 + 160, y: 300 }} end={{ x: 440, y: 200 }} />
-        {/*<AnimatedEdge end={{ x: 100 + 160, y: 300 }} start={{ x: 440, y: 200 }} />*/}
-        <Edge start={{ x: 100 + 160, y: 300 }} end={{ x: 400, y: 420 }} />
+        {nodeEdges.map((edge) => (
+          <Edge key={edge.id} start={edge.start} end={edge.end} />
+        ))}
         {/* Nodes */}
         {nodeRenderers.map((renderer) => renderNode(renderer))}
       </Application>
