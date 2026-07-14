@@ -1,8 +1,8 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import type { NodeProps } from "./types";
 import { Container, Graphics, Point } from "pixi.js";
 import AlignedPixiContainer from "./AlignedPixiContainer";
-import { NODE_SIZES, PORT_SIZE } from "./shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -16,10 +16,10 @@ const nodeStyle = {
   yOffset: 5,
   hoverXOffset: 40,
   hoverYOffset: 12,
-  text: "JSON Model",
+  text: "JSON",
 };
 
-export default function JsonNode({ x, y }: NodeProps) {
+export default function JsonNode({ x, y, active }: NodeProps) {
   const { width, height, radius, text } = nodeStyle;
   const containerRef = useRef<Container>(null);
   const nodeRef = useRef<Graphics>(null);
@@ -33,11 +33,11 @@ export default function JsonNode({ x, y }: NodeProps) {
       graphics.clear();
       graphics
         .roundShape(getCornerPoints(width, height, -xOffset, yOffset), radius)
-        .fill("coral")
+        .fill(COLOR_SCHEME.nodeBodyB)
         .stroke({ width: 2 });
       graphics
         .roundShape(getCornerPoints(width, height, xOffset, -yOffset), radius)
-        .fill("coral")
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2 });
     },
     [width, height, radius],
@@ -60,7 +60,7 @@ export default function JsonNode({ x, y }: NodeProps) {
     drawNode(nodeRef.current);
   };
 
-  const handleNodeHoverIn = () => {
+  const expandNode = () => {
     contextSafe(() => {
       const { hoverXOffset, hoverYOffset } = nodeStyle;
       gsap.to(nodeShapeRef.current, {
@@ -73,7 +73,7 @@ export default function JsonNode({ x, y }: NodeProps) {
     })();
   };
 
-  const handleNodeHoverOut = () => {
+  const foldNode = () => {
     contextSafe(() => {
       const { xOffset, yOffset } = nodeStyle;
       gsap.to(nodeShapeRef.current, {
@@ -86,14 +86,17 @@ export default function JsonNode({ x, y }: NodeProps) {
     })();
   };
 
+  useEffect(() => {
+    if (active) expandNode();
+    else foldNode();
+  }, [active]);
+
   return (
     <AlignedPixiContainer
       ref={containerRef}
       x={x}
       y={y}
       eventMode="static"
-      onPointerOver={handleNodeHoverIn}
-      onPointerOut={handleNodeHoverOut}
       nodeHeight={height}
     >
       <pixiContainer x={0} y={height / 2}>
@@ -101,16 +104,18 @@ export default function JsonNode({ x, y }: NodeProps) {
       </pixiContainer>
       <pixiContainer>
         <pixiGraphics ref={nodeRef} draw={drawNode} />
-        <pixiText
-          text={text}
-          x={width / 2}
-          y={height / 2}
-          anchor={0.5}
-          style={{
-            fontSize: 19,
-            fill: "white",
-          }}
-        />
+        {active && (
+          <pixiText
+            text={text}
+            x={width / 2}
+            y={height / 2 - nodeStyle.yOffset}
+            anchor={0.5}
+            style={{
+              fontSize: 19,
+              fill: "white",
+            }}
+          />
+        )}
       </pixiContainer>
     </AlignedPixiContainer>
   );

@@ -1,4 +1,6 @@
 type NodeType = "io" | "chat" | "branch" | "json" | "lambda" | "state" | "workflow";
+type ColorField =
+  "edge" | "activeEdge" | "nodeBodyA" | "nodeBodyB" | "outline" | "nodeBodyC";
 
 interface Coord {
   x: number;
@@ -15,6 +17,7 @@ interface BezierPoints {
 interface NodeProps {
   x: number;
   y: number;
+  active?: boolean;
 }
 
 interface BaseNodeStyle {
@@ -27,4 +30,12 @@ interface NodeStyle extends BaseNodeStyle {
   height: number;
 }
 
-export type { NodeType, Coord, NodeProps, NodeStyle, BaseNodeStyle, BezierPoints };
+export type {
+  ColorField,
+  NodeType,
+  Coord,
+  NodeProps,
+  NodeStyle,
+  BaseNodeStyle,
+  BezierPoints,
+};

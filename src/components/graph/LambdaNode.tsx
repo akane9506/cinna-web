@@ -1,8 +1,8 @@
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
 import { Container, Point, type Graphics } from "pixi.js";
-import { useCallback, useRef } from "react";
-import { NODE_SIZES, PORT_SIZE } from "./shared";
+import { useCallback, useEffect, useRef } from "react";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 
@@ -13,7 +13,7 @@ const nodeStyle = {
   height: h,
   radius: r,
   cornerOffset: 30,
-  text: "Lambdas",
+  text: "Lambda",
 };
 
 const gearStyle = {
@@ -31,12 +31,12 @@ const gearStyle = {
   duration: 0.35,
 };
 
-export default function LambdaNode({ x, y }: NodeProps) {
-  const { width, height, text, radius, cornerOffset } = nodeStyle;
+export default function LambdaNode({ x, y, active }: NodeProps) {
+  const { width, height, radius, cornerOffset, text } = nodeStyle;
   const gearRef = useRef<Container>(null);
   const { contextSafe } = useGSAP({ scope: gearRef });
 
-  const handleNodeHoverIn = () => {
+  const expandNode = () => {
     contextSafe(() => {
       if (!gearRef.current) return;
       const { hoverX, hoverY, hoverScale, duration } = gearStyle;
@@ -62,7 +62,7 @@ export default function LambdaNode({ x, y }: NodeProps) {
     })();
   };
 
-  const handleNodeHoverOut = () => {
+  const foldNode = () => {
     contextSafe(() => {
       if (!gearRef.current) return;
       const { x, y, scale, duration } = gearStyle;
@@ -82,12 +82,17 @@ export default function LambdaNode({ x, y }: NodeProps) {
     })();
   };
 
+  useEffect(() => {
+    if (active) expandNode();
+    else foldNode();
+  }, [active]);
+
   const drawNode = useCallback(
     (graphics: Graphics) => {
       graphics.clear();
       graphics
         .roundShape(getCornerPoints(width, height, cornerOffset), radius)
-        .fill({ color: "coral" })
+        .fill({ color: COLOR_SCHEME.nodeBodyA })
         .stroke({ width: 2 });
     },
     [width, height, radius, cornerOffset],
@@ -110,7 +115,7 @@ export default function LambdaNode({ x, y }: NodeProps) {
         getGearPoints(innerRadius, outerRadius, numTeeth, topLandOffset),
         cornerRadius,
       )
-      .fill({ color: "coral" })
+      .fill({ color: COLOR_SCHEME.nodeBodyC })
       .stroke({ width: 2 })
       .circle(0, 0, 20) // the first cut removes the stroke
       .cut()
@@ -139,20 +144,17 @@ export default function LambdaNode({ x, y }: NodeProps) {
       <pixiContainer x={0} y={height / 2}>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
-      <pixiContainer
-        eventMode="static"
-        cursor="pointer"
-        onPointerOver={handleNodeHoverIn}
-        onPointerOut={handleNodeHoverOut}
-      >
+      <pixiContainer eventMode="static" cursor="pointer">
         <pixiGraphics draw={drawNode} />
-        <pixiText
-          text={text}
-          x={width / 2}
-          y={height / 2}
-          anchor={0.5}
-          style={{ fontSize: 19, fill: "white" }}
-        />
+        {active && (
+          <pixiText
+            text={text}
+            x={width / 2}
+            y={height / 2}
+            anchor={0.5}
+            style={{ fontSize: 19, fill: "white" }}
+          />
+        )}
       </pixiContainer>
     </AlignedPixiContainer>
   );

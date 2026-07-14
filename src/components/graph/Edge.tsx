@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 import { GraphicsPath, type Graphics } from "pixi.js";
 import type { Coord } from "@/components/graph/types";
-import { getBezierPoints } from "@/components/graph/shared";
+import { COLOR_SCHEME, getBezierPoints } from "@/components/graph/shared";
 
 type EdgeProps = {
   start: Coord;
@@ -12,7 +12,10 @@ export default function Edge({ start, end }: EdgeProps) {
   const path = useMemo(() => createEdgePath(start, end), [start, end]);
   const draw = useCallback(
     (graphics: Graphics) => {
-      graphics.clear().path(path).stroke({ color: "teal", width: 4 });
+      graphics
+        .clear()
+        .path(path)
+        .stroke({ color: COLOR_SCHEME.edge, width: 4, alpha: 0.1 });
     },
     [path],
   );

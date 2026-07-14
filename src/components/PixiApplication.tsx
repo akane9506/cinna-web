@@ -17,8 +17,8 @@ import LambdaNode from "@/components/graph/LambdaNode";
 import StateNode from "@/components/graph/StateNode";
 import WorkflowNode from "@/components/graph/WorkflowNode";
 import JsonNode from "@/components/graph/JsonNode";
-import Edge from "@/components/graph/Edge";
 import AnimatedEdge from "@/components/graph/AnimatedEdge";
+import Edge from "./graph/Edge";
 
 gsap.registerPlugin(useGSAP);
 
@@ -31,17 +31,28 @@ export default function PixiApplication() {
     setAnimatedEdges(newEdges);
   };
 
+  const getActiveNodes = () => {
+    const activeNodes = new Set<string>();
+    animatedEdges.forEach((edge) => {
+      const [, from, to] = edge.id.split("-");
+      activeNodes.add(from);
+      activeNodes.add(to);
+    });
+    return activeNodes;
+  };
+  const activeNodes = getActiveNodes();
+
   return (
     <div ref={canvasParentRef} className="w-full h-full">
       <Application
         resizeTo={canvasParentRef}
-        background={"lightgray"}
+        background={0xf1f0ed}
         antialias
         autoDensity
         resolution={window.devicePixelRatio}
       >
         {/* Edges */}
-        {nodeEdges.map((edge) => (
+        {animatedEdges.map((edge) => (
           <Edge key={edge.id} start={edge.start} end={edge.end} />
         ))}
         {/* Animated Edges */}
@@ -60,7 +71,7 @@ export default function PixiApplication() {
             onPointerEnter={() => handleUpdateAnimatedEdges(renderer)}
             key={renderer.id}
           >
-            {renderNode(renderer)}
+            {renderNode(renderer, activeNodes)}
           </pixiContainer>
         ))}
       </Application>
@@ -68,24 +79,25 @@ export default function PixiApplication() {
   );
 }
 
-function renderNode(renderer: NodeRenderer): ReactElement {
-  const { type, x, y, branches } = renderer;
-  const props = { x, y, branches };
+function renderNode(renderer: NodeRenderer, activeNodes: Set<string>): ReactElement {
+  const { type, x, y, branches, id } = renderer;
+  const active = activeNodes.has(id);
+  const props = { x, y, branches, active };
   switch (type) {
     case "io":
-      return <IONode x={x} y={y} />;
+      return <IONode {...props} />;
     case "chat":
       return <ChatNode {...props} />;
     case "state":
-      return <StateNode x={x} y={y} />;
+      return <StateNode {...props} />;
     case "branch":
-      return <BranchNode x={x} y={y} branches={branches} />;
+      return <BranchNode {...props} />;
     case "json":
-      return <JsonNode x={x} y={y} />;
+      return <JsonNode {...props} />;
     case "lambda":
-      return <LambdaNode x={x} y={y} />;
+      return <LambdaNode {...props} />;
     case "workflow":
-      return <WorkflowNode x={x} y={y} />;
+      return <WorkflowNode {...props} />;
     default:
       return <></>;
   }
