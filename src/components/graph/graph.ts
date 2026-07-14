@@ -151,17 +151,21 @@ const drawEdges = (head: GraphNode): EdgeRenderer[] => {
 
 // create nodes
 const head = new GraphNode("head", "io", 100, 300, []);
-const chat1 = new GraphNode("chat1", "chat", 440, 200, []);
-const branch1 = new GraphNode("branch1", "branch", 400, 450, [], 2);
-const state1 = new GraphNode("state1", "state", 560, 360, []);
-const json1 = new GraphNode("json1", "json", 720, 300, []);
-const lambda1 = new GraphNode("lambda1", "lambda", 1130, 280, []);
-const workflow1 = new GraphNode("workflow1", "workflow", 580, 520, []);
-const workflow2 = new GraphNode("workflow2", "workflow", 780, 100, []);
-const branch2 = new GraphNode("branch2", "branch", 820, 520, [], 3);
-const state2 = new GraphNode("state2", "state", 980, 420, []);
-const io2 = new GraphNode("io2", "io", 980, 720, []);
-const chat2 = new GraphNode("chat2", "chat", 1080, 560, []);
+const chat1 = new GraphNode("chat1", "chat", 380, 200, []);
+const branch1 = new GraphNode("branch1", "branch", 380, 450, [], 2);
+
+const state1 = new GraphNode("state1", "state", 600, 350, []);
+const workflow1 = new GraphNode("workflow1", "workflow", 560, 550, []);
+
+const json1 = new GraphNode("json1", "json", 800, 300, []);
+const branch2 = new GraphNode("branch2", "branch", 800, 520, [], 3);
+const workflow2 = new GraphNode("workflow2", "workflow", 800, 100, []);
+
+const state2 = new GraphNode("state2", "state", 1050, 420, []);
+const io2 = new GraphNode("io2", "io", 1050, 720, []);
+
+const lambda1 = new GraphNode("lambda1", "lambda", 1200, 280, []);
+const chat2 = new GraphNode("chat2", "chat", 1200, 520, []);
 
 //  create graph
 head.children = [chat1, branch1];

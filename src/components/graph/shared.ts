@@ -1,15 +1,24 @@
-import type { NodeType, Coord, BezierPoints } from "./types";
+import type { NodeType, Coord, BezierPoints, ColorField } from "./types";
 
 const PORT_SIZE = 10;
 
 const NODE_SIZES: Record<NodeType, { w: number; h: number; r: number }> = {
-  io: { w: 160, h: 60, r: 12 },
-  chat: { w: 140, h: 110, r: 12 },
+  io: { w: 150, h: 50, r: 12 },
+  chat: { w: 140, h: 90, r: 12 },
   lambda: { w: 140, h: 80, r: 12 },
   json: { w: 140, h: 80, r: 6 },
   workflow: { w: 170, h: 100, r: 12 },
   state: { w: 90, h: 0, r: 0 }, // for state node, w means diameter
   branch: { w: 80, h: 50, r: 12 }, // h for branch means unit height
+};
+
+const COLOR_SCHEME: Record<ColorField, number> = {
+  nodeBodyA: 0xa09cc1,
+  nodeBodyB: 0x99b6b2,
+  nodeBodyC: 0xd38882,
+  edge: 0x99c2db,
+  activeEdge: 0xa7bee0,
+  outline: 0xffffff,
 };
 
 const yAlign = (y: number | undefined, nodeHeight: number) => {
@@ -28,5 +37,5 @@ const getBezierPoints = (start: Coord, end: Coord): BezierPoints => {
   return { bStart: p0, c1: p1, c2: p2, bEnd: p3 };
 };
 
-export { PORT_SIZE, NODE_SIZES };
+export { PORT_SIZE, NODE_SIZES, COLOR_SCHEME };
 export { yAlign, getBezierPoints };

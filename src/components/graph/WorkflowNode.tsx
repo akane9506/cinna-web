@@ -4,7 +4,7 @@ import { useCallback, useRef } from "react";
 import { Container, Point, type Graphics } from "pixi.js";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
-import { NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
 
 const { w, h, r } = NODE_SIZES["workflow"];
 
@@ -26,7 +26,7 @@ const subNodeStyle = {
 };
 
 export default function WorkflowNode({ x, y }: NodeProps) {
-  const { width, radius, text, height } = nodeStyle;
+  const { width, radius, height } = nodeStyle;
 
   const containerRef = useRef<Container>(null);
   const nodeShapeRef = useRef<Graphics>(null);
@@ -89,7 +89,7 @@ export default function WorkflowNode({ x, y }: NodeProps) {
       graphics.clear();
       graphics
         .roundShape(getDiamondCorners(width, height), radius)
-        .fill("coral")
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2 });
     },
     [width, height, radius],
@@ -101,7 +101,10 @@ export default function WorkflowNode({ x, y }: NodeProps) {
     const centeredDiamond = getDiamondCorners(width, height);
     centeredDiamond.forEach((point) => (point.x -= width / 2));
     const position = graphics.position;
-    graphics.roundShape(centeredDiamond, radius).fill("coral").stroke({ width: 2 });
+    graphics
+      .roundShape(centeredDiamond, radius)
+      .fill(COLOR_SCHEME.nodeBodyB)
+      .stroke({ width: 2 });
     graphics
       .moveTo(-position.x, -position.y / 2)
       .bezierCurveTo(
@@ -153,13 +156,13 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         onPointerOut={handleNodeHoverOut}
       >
         <pixiGraphics ref={nodeShapeRef} draw={drawNode} />
-        <pixiText
+        {/*<pixiText
           text={text}
           x={width / 2}
           y={0}
           anchor={0.5}
           style={{ fontSize: 19, fill: "white" }}
-        />
+        />*/}
       </pixiContainer>
     </AlignedPixiContainer>
   );

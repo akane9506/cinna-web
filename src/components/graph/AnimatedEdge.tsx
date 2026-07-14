@@ -3,7 +3,7 @@ import { useGSAP } from "@gsap/react";
 import { useCallback, useRef } from "react";
 import { type Graphics, GraphicsPath } from "pixi.js";
 import type { Coord, BezierPoints } from "@/components/graph/types";
-import { getBezierPoints } from "@/components/graph/shared";
+import { COLOR_SCHEME, getBezierPoints } from "@/components/graph/shared";
 
 type AnimatedEdgeProps = {
   start: Coord;
@@ -31,9 +31,9 @@ export default function AnimatedEdge({ start, end, depth }: AnimatedEdgeProps) {
       };
       render();
       gsap.to(state, {
-        delay: depth * 0.7,
+        delay: depth * 0.5,
         progress: 1,
-        duration: 0.7,
+        duration: 0.5,
         ease: "power3.inOut",
         onUpdate: render,
         onComplete: () => {
@@ -52,9 +52,9 @@ export default function AnimatedEdge({ start, end, depth }: AnimatedEdgeProps) {
 function drawEdge(graphics: Graphics, start: Coord, end: Coord, progress: number) {
   const path = createAnimatedEdgePath(start, end, progress);
   graphics.clear().path(path).stroke({
-    color: "coral",
+    color: COLOR_SCHEME.activeEdge,
     cap: "round",
-    width: 8,
+    width: 5,
   });
 }
 

@@ -4,6 +4,7 @@ import { yAlign } from "./shared";
 // this is the wrapper component to center pixiContainer vertically
 type AlignedPixiContainerProps = {
   nodeHeight: number;
+  label?: string;
 } & PixiReactElementProps;
 
 export default function AlignedPixiContainer(props: AlignedPixiContainerProps) {

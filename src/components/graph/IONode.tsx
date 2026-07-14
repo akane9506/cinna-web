@@ -1,6 +1,6 @@
 import { Graphics } from "pixi.js";
 import { useCallback } from "react";
-import { PORT_SIZE } from "@/components/graph/shared";
+import { COLOR_SCHEME, PORT_SIZE } from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
@@ -11,7 +11,7 @@ const nodeStyle = {
   text: "I/O Processor",
 };
 
-export default function IONode({ x, y }: NodeProps) {
+export default function IONode({ x, y, active }: NodeProps) {
   const { width, height, radius, text } = nodeStyle;
   const drawBody = useCallback(
     (graphics: Graphics) => {
@@ -19,7 +19,7 @@ export default function IONode({ x, y }: NodeProps) {
       // this is the base node
       graphics
         .roundRect(0, 0, width, height, radius)
-        .fill({ color: "coral" })
+        .fill({ color: COLOR_SCHEME.nodeBodyB })
         .stroke({ width: 2 });
     },
     [width, height, radius],
@@ -40,16 +40,18 @@ export default function IONode({ x, y }: NodeProps) {
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
       <pixiGraphics draw={drawBody} />
-      <pixiText
-        text={text}
-        x={width / 2}
-        y={height / 2}
-        anchor={0.5}
-        style={{
-          fontSize: 19,
-          fill: "white",
-        }}
-      />
+      {active && (
+        <pixiText
+          text={text}
+          x={width / 2}
+          y={height / 2}
+          anchor={0.5}
+          style={{
+            fontSize: 19,
+            fill: "white",
+          }}
+        />
+      )}
     </AlignedPixiContainer>
   );
 }

@@ -1,8 +1,8 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { DEG_TO_RAD, Graphics, type Container } from "pixi.js";
 import { useGSAP } from "@gsap/react";
-import { NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 
@@ -35,13 +35,13 @@ const toolsStyle = {
   extend: 16,
   radius: 12,
   x: 30,
-  y: 120,
+  y: 100,
   rotation: -220 * DEG_TO_RAD,
   text: "Tools",
   hoverRotation: -20 * DEG_TO_RAD,
 };
 
-export default function ChatNode({ x, y }: NodeProps) {
+export default function ChatNode({ x, y, active }: NodeProps) {
   const { width, height, radius, text } = nodeStyle;
 
   const mcpRef = useRef<Graphics>(null);
@@ -49,7 +49,7 @@ export default function ChatNode({ x, y }: NodeProps) {
   const containerRef = useRef<Container>(null);
   const { contextSafe } = useGSAP({ scope: containerRef });
 
-  const handleHoverIn = () => {
+  const expandNode = () => {
     contextSafe(() => {
       if (!mcpRef.current) return;
       gsap.to(mcpRef.current, {
@@ -67,7 +67,7 @@ export default function ChatNode({ x, y }: NodeProps) {
     })();
   };
 
-  const handleHoverOut = () => {
+  const foldNode = () => {
     contextSafe(() => {
       if (!mcpRef.current) return;
       gsap.to(mcpRef.current, {
@@ -85,6 +85,11 @@ export default function ChatNode({ x, y }: NodeProps) {
     })();
   };
 
+  useEffect(() => {
+    if (active) expandNode();
+    else foldNode();
+  }, [active]);
+
   // draw node body
   const drawBody = useCallback(
     (graphics: Graphics) => {
@@ -92,8 +97,8 @@ export default function ChatNode({ x, y }: NodeProps) {
       // this is the base node
       graphics
         .roundRect(0, 0, width, height, radius)
-        .fill({ color: "coral" })
-        .stroke({ width: 2 });
+        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .stroke({ width: 2, color: COLOR_SCHEME.outline });
     },
     [width, height, radius],
   );
@@ -120,7 +125,7 @@ export default function ChatNode({ x, y }: NodeProps) {
         ],
         mcpStyle.radius,
       )
-      .fill({ color: "coral" })
+      .fill({ color: COLOR_SCHEME.nodeBodyB })
       .stroke({ width: 2 });
   }, []);
   // draw tool tag
@@ -137,7 +142,7 @@ export default function ChatNode({ x, y }: NodeProps) {
         ],
         toolsStyle.radius,
       )
-      .fill({ color: "coral" })
+      .fill({ color: COLOR_SCHEME.nodeBodyC })
       .stroke({ width: 2 });
   }, []);
 
@@ -186,23 +191,20 @@ export default function ChatNode({ x, y }: NodeProps) {
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
       {/* Chat Node body */}
-      <pixiContainer
-        eventMode="static"
-        cursor="pointer"
-        onPointerOver={handleHoverIn}
-        onPointerOut={handleHoverOut}
-      >
+      <pixiContainer eventMode="static" cursor="pointer">
         <pixiGraphics draw={drawBody} />
-        <pixiText
-          text={text}
-          x={width / 2}
-          y={height / 2}
-          anchor={0.5}
-          style={{
-            fontSize: 19,
-            fill: "white",
-          }}
-        />
+        {active && (
+          <pixiText
+            text={text}
+            x={width / 2}
+            y={height / 2}
+            anchor={0.5}
+            style={{
+              fontSize: 19,
+              fill: "white",
+            }}
+          />
+        )}
       </pixiContainer>
     </AlignedPixiContainer>
   );
