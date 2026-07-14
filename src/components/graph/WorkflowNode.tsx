@@ -49,7 +49,7 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         x: 1.0,
         y: hoverScale,
         duration: 0.35,
-        ease: "elastic.out",
+        ease: "power2.out",
       });
 
       if (!subnodesContainerRef.current) return;
@@ -58,7 +58,7 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         x: (index) => [0, hoverOffsetX, -hoverOffsetX][index],
         y: (index) => [hoverOffsetYCenter, hoverOffsetY, hoverOffsetY][index],
         duration: 0.35,
-        ease: "elastic.out",
+        ease: "power2.out",
         onUpdate: redrawSubNodes,
       });
     })();
@@ -71,7 +71,7 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         x: 1.0,
         y: 1.0,
         duration: 0.35,
-        ease: "elastic.out",
+        ease: "power2.out",
       });
       if (!subnodesContainerRef.current) return;
       gsap.to(subnodesContainerRef.current.children, {

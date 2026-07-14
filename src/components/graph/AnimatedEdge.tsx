@@ -8,9 +8,10 @@ import { getBezierPoints } from "@/components/graph/shared";
 type AnimatedEdgeProps = {
   start: Coord;
   end: Coord;
+  depth: number;
 };
 
-export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
+export default function AnimatedEdge({ start, end, depth }: AnimatedEdgeProps) {
   const graphicRef = useRef<Graphics>(null);
   const draw = useCallback((graphics: Graphics) => {
     if (!graphicRef.current) {
@@ -30,8 +31,9 @@ export default function AnimatedEdge({ start, end }: AnimatedEdgeProps) {
       };
       render();
       gsap.to(state, {
+        delay: depth * 0.7,
         progress: 1,
-        duration: 1,
+        duration: 0.7,
         ease: "power3.inOut",
         onUpdate: render,
         onComplete: () => {
