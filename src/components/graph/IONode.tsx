@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { COLOR_SCHEME, PORT_SIZE } from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
+import NodeName from "./NodeName";
 
 const nodeStyle = {
   width: 160,
@@ -40,18 +41,7 @@ export default function IONode({ x, y, active }: NodeProps) {
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
       <pixiGraphics draw={drawBody} />
-      {active && (
-        <pixiText
-          text={text}
-          x={width / 2}
-          y={height / 2}
-          anchor={0.5}
-          style={{
-            fontSize: 19,
-            fill: "white",
-          }}
-        />
-      )}
+      {active && <NodeName text={text} nodeWidth={width} yShift={height / 2} />}
     </AlignedPixiContainer>
   );
 }

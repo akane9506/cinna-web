@@ -5,6 +5,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import NodeName from "./NodeName";
 
 const { w, h, r } = NODE_SIZES["lambda"];
 
@@ -36,7 +37,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
   const gearRef = useRef<Container>(null);
   const { contextSafe } = useGSAP({ scope: gearRef });
 
-  const expandNode = () => {
+  const expandNode = useCallback(() => {
     contextSafe(() => {
       if (!gearRef.current) return;
       const { hoverX, hoverY, hoverScale, duration } = gearStyle;
@@ -60,9 +61,9 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
         ease: "power2.out",
       });
     })();
-  };
+  }, [contextSafe]);
 
-  const foldNode = () => {
+  const foldNode = useCallback(() => {
     contextSafe(() => {
       if (!gearRef.current) return;
       const { x, y, scale, duration } = gearStyle;
@@ -80,12 +81,12 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
         ease: "power2.out",
       });
     })();
-  };
+  }, [contextSafe]);
 
   useEffect(() => {
     if (active) expandNode();
     else foldNode();
-  }, [active]);
+  }, [active, foldNode, expandNode]);
 
   const drawNode = useCallback(
     (graphics: Graphics) => {
@@ -146,15 +147,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
       </pixiContainer>
       <pixiContainer eventMode="static" cursor="pointer">
         <pixiGraphics draw={drawNode} />
-        {active && (
-          <pixiText
-            text={text}
-            x={width / 2}
-            y={height / 2}
-            anchor={0.5}
-            style={{ fontSize: 19, fill: "white" }}
-          />
-        )}
+        {active && <NodeName text={text} nodeWidth={width} yShift={height / 2} />}
       </pixiContainer>
     </AlignedPixiContainer>
   );

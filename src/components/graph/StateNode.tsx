@@ -3,6 +3,7 @@ import AlignedPixiContainer from "./AlignedPixiContainer";
 import type { NodeProps } from "./types";
 import type { Graphics } from "pixi.js";
 import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
+import NodeName from "./NodeName";
 
 const { w } = NODE_SIZES["state"];
 
@@ -11,8 +12,8 @@ const nodeStyle = {
   text: "State",
 };
 
-export default function StateNode({ x, y }: NodeProps) {
-  const { diameter } = nodeStyle;
+export default function StateNode({ x, y, active }: NodeProps) {
+  const { diameter, text } = nodeStyle;
   const radius = diameter / 2;
   const drawNode = useCallback(
     (graphics: Graphics) => {
@@ -40,14 +41,8 @@ export default function StateNode({ x, y }: NodeProps) {
       </pixiContainer>
       <pixiContainer x={radius} y={radius}>
         <pixiGraphics draw={drawNode} />
+        {active && <NodeName text={text} nodeWidth={0} />}
       </pixiContainer>
-      {/*<pixiText
-        text={text}
-        x={radius}
-        y={radius}
-        anchor={0.5}
-        style={{ fontSize: 19, fill: "white" }}
-      />*/}
     </AlignedPixiContainer>
   );
 }

@@ -19,6 +19,7 @@ import WorkflowNode from "@/components/graph/WorkflowNode";
 import JsonNode from "@/components/graph/JsonNode";
 import AnimatedEdge from "@/components/graph/AnimatedEdge";
 import Edge from "./graph/Edge";
+import Grid from "./graph/Grid";
 
 gsap.registerPlugin(useGSAP);
 
@@ -51,6 +52,7 @@ export default function PixiApplication() {
         autoDensity
         resolution={window.devicePixelRatio}
       >
+        <Grid />
         {/* Edges */}
         {animatedEdges.map((edge) => (
           <Edge key={edge.id} start={edge.start} end={edge.end} />

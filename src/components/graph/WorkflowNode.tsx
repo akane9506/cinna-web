@@ -1,10 +1,11 @@
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Container, Point, type Graphics } from "pixi.js";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
 import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import NodeName from "./NodeName";
 
 const { w, h, r } = NODE_SIZES["workflow"];
 
@@ -21,12 +22,12 @@ const subNodeStyle = {
   height: 40,
   radius: 6,
   hoverOffsetX: 80,
-  hoverOffsetY: 145,
-  hoverOffsetYCenter: 155,
+  hoverOffsetY: 115,
+  hoverOffsetYCenter: 135,
 };
 
-export default function WorkflowNode({ x, y }: NodeProps) {
-  const { width, radius, height } = nodeStyle;
+export default function WorkflowNode({ x, y, active }: NodeProps) {
+  const { width, radius, height, text } = nodeStyle;
 
   const containerRef = useRef<Container>(null);
   const nodeShapeRef = useRef<Graphics>(null);
@@ -34,14 +35,60 @@ export default function WorkflowNode({ x, y }: NodeProps) {
 
   const { contextSafe } = useGSAP({ scope: containerRef });
 
-  const redrawSubNodes = () => {
+  // draw node body
+  const drawNode = useCallback(
+    (graphics: Graphics) => {
+      graphics.clear();
+      graphics
+        .roundShape(getDiamondCorners(width, height), radius)
+        .fill(COLOR_SCHEME.nodeBodyA)
+        .stroke({ width: 2 });
+    },
+    [width, height, radius],
+  );
+
+  // draw node ports
+  const drawPorts = useCallback(
+    (graphics: Graphics) => {
+      graphics.clear();
+      graphics.circle(8, 0, PORT_SIZE).fill("white");
+      graphics.circle(width - 8, 0, PORT_SIZE).fill("white");
+    },
+    [width],
+  );
+
+  // draw expanded decoration nodes
+  const drawSubNode = useCallback((graphics: Graphics) => {
+    const { width, height, radius } = subNodeStyle;
+    graphics.clear();
+    const centeredDiamond = getDiamondCorners(width, height);
+    centeredDiamond.forEach((point) => (point.x -= width / 2));
+    const position = graphics.position;
+    graphics
+      .roundShape(centeredDiamond, radius)
+      .fill(COLOR_SCHEME.nodeBodyC)
+      .stroke({ width: 2 });
+    graphics
+      .moveTo(-position.x, -position.y / 2)
+      .bezierCurveTo(
+        -position.x,
+        -position.y / 2 + subNodeStyle.hoverOffsetY / 3,
+        centeredDiamond[1].x,
+        centeredDiamond[1].y - subNodeStyle.hoverOffsetY / 3,
+        centeredDiamond[1].x,
+        centeredDiamond[1].y,
+      )
+      .stroke({ width: 2, color: COLOR_SCHEME.activeEdge });
+  }, []);
+
+  const redrawSubNodes = useCallback(() => {
     if (!subnodesContainerRef.current) return;
     subnodesContainerRef.current.children.map((node) => {
       drawSubNode(node as Graphics);
     });
-  };
+  }, [drawSubNode]);
 
-  const handleNodeHoverIn = () => {
+  const expandNode = useCallback(() => {
     contextSafe(() => {
       if (!nodeShapeRef.current) return;
       const { hoverScale } = nodeStyle;
@@ -49,7 +96,7 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         x: 1.0,
         y: hoverScale,
         duration: 0.35,
-        ease: "power2.out",
+        ease: "elastic.out",
       });
 
       if (!subnodesContainerRef.current) return;
@@ -62,16 +109,16 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         onUpdate: redrawSubNodes,
       });
     })();
-  };
+  }, [redrawSubNodes, contextSafe]);
 
-  const handleNodeHoverOut = () => {
+  const foldNode = useCallback(() => {
     contextSafe(() => {
       if (!nodeShapeRef.current) return;
       gsap.to(nodeShapeRef.current.scale, {
         x: 1.0,
         y: 1.0,
         duration: 0.35,
-        ease: "power2.out",
+        ease: "elastic.out",
       });
       if (!subnodesContainerRef.current) return;
       gsap.to(subnodesContainerRef.current.children, {
@@ -82,50 +129,12 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         onUpdate: redrawSubNodes,
       });
     })();
-  };
+  }, [contextSafe, redrawSubNodes, height]);
 
-  const drawNode = useCallback(
-    (graphics: Graphics) => {
-      graphics.clear();
-      graphics
-        .roundShape(getDiamondCorners(width, height), radius)
-        .fill(COLOR_SCHEME.nodeBodyA)
-        .stroke({ width: 2 });
-    },
-    [width, height, radius],
-  );
-
-  const drawSubNode = useCallback((graphics: Graphics) => {
-    const { width, height, radius } = subNodeStyle;
-    graphics.clear();
-    const centeredDiamond = getDiamondCorners(width, height);
-    centeredDiamond.forEach((point) => (point.x -= width / 2));
-    const position = graphics.position;
-    graphics
-      .roundShape(centeredDiamond, radius)
-      .fill(COLOR_SCHEME.nodeBodyB)
-      .stroke({ width: 2 });
-    graphics
-      .moveTo(-position.x, -position.y / 2)
-      .bezierCurveTo(
-        -position.x,
-        -position.y / 2 + subNodeStyle.hoverOffsetY / 3,
-        centeredDiamond[1].x,
-        centeredDiamond[1].y - subNodeStyle.hoverOffsetY / 3,
-        centeredDiamond[1].x,
-        centeredDiamond[1].y,
-      )
-      .stroke({ width: 2 });
-  }, []);
-
-  const drawPorts = useCallback(
-    (graphics: Graphics) => {
-      graphics.clear();
-      graphics.circle(8, 0, PORT_SIZE).fill("white");
-      graphics.circle(width - 8, 0, PORT_SIZE).fill("white");
-    },
-    [width],
-  );
+  useEffect(() => {
+    if (active) expandNode();
+    else foldNode();
+  }, [active, expandNode, foldNode]);
 
   return (
     <AlignedPixiContainer ref={containerRef} x={x} y={y} nodeHeight={height}>
@@ -147,22 +156,9 @@ export default function WorkflowNode({ x, y }: NodeProps) {
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
       {/* Node body */}
-      <pixiContainer
-        x={0}
-        y={height / 2}
-        eventMode="static"
-        cursor="pointer"
-        onPointerOver={handleNodeHoverIn}
-        onPointerOut={handleNodeHoverOut}
-      >
+      <pixiContainer x={0} y={height / 2}>
         <pixiGraphics ref={nodeShapeRef} draw={drawNode} />
-        {/*<pixiText
-          text={text}
-          x={width / 2}
-          y={0}
-          anchor={0.5}
-          style={{ fontSize: 19, fill: "white" }}
-        />*/}
+        {active && <NodeName nodeWidth={width} text={text} />}
       </pixiContainer>
     </AlignedPixiContainer>
   );

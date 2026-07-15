@@ -1,8 +1,9 @@
 import { useCallback } from "react";
-import { type Graphics } from "pixi.js";
+import { DEG_TO_RAD, type Graphics } from "pixi.js";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import NodeName from "./NodeName";
 
 interface BranchNodeProps extends NodeProps {
   branches: number;
@@ -19,8 +20,8 @@ const nodeStyle = {
   text: "Branches",
 };
 
-export default function BranchNode({ x, y, branches }: BranchNodeProps) {
-  const { width, unitHeight, radius, shrinkX, shrinkY } = nodeStyle;
+export default function BranchNode({ x, y, branches, active }: BranchNodeProps) {
+  const { width, unitHeight, radius, shrinkX, shrinkY, text } = nodeStyle;
   const clampedBranches = Math.min(3, Math.max(2, branches));
   const totalHeight = unitHeight * (clampedBranches + 1);
 
@@ -64,17 +65,14 @@ export default function BranchNode({ x, y, branches }: BranchNodeProps) {
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>
       <pixiGraphics draw={drawNode} />
-      {/*<pixiText
-        text={text}
-        x={width / 2}
-        y={totalHeight / 2}
-        anchor={0.5}
-        rotation={-90 * DEG_TO_RAD}
-        style={{
-          fontSize: 19,
-          fill: "white",
-        }}
-      />*/}
+      {active && (
+        <NodeName
+          text={text}
+          nodeWidth={width}
+          yShift={totalHeight / 2}
+          rotation={-90 * DEG_TO_RAD}
+        />
+      )}
     </AlignedPixiContainer>
   );
 }
