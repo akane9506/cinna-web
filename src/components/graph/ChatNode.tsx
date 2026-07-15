@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
+import NodeName from "./NodeName";
 
 const { w, h, r } = NODE_SIZES["chat"];
 
@@ -49,7 +50,7 @@ export default function ChatNode({ x, y, active }: NodeProps) {
   const containerRef = useRef<Container>(null);
   const { contextSafe } = useGSAP({ scope: containerRef });
 
-  const expandNode = () => {
+  const expandNode = useCallback(() => {
     contextSafe(() => {
       if (!mcpRef.current) return;
       gsap.to(mcpRef.current, {
@@ -65,9 +66,9 @@ export default function ChatNode({ x, y, active }: NodeProps) {
         ease: "elastic.out",
       });
     })();
-  };
+  }, [contextSafe]);
 
-  const foldNode = () => {
+  const foldNode = useCallback(() => {
     contextSafe(() => {
       if (!mcpRef.current) return;
       gsap.to(mcpRef.current, {
@@ -83,12 +84,12 @@ export default function ChatNode({ x, y, active }: NodeProps) {
         ease: "elastic.out",
       });
     })();
-  };
+  }, [contextSafe]);
 
   useEffect(() => {
     if (active) expandNode();
     else foldNode();
-  }, [active]);
+  }, [active, expandNode, foldNode]);
 
   // draw node body
   const drawBody = useCallback(
@@ -156,15 +157,10 @@ export default function ChatNode({ x, y, active }: NodeProps) {
         ref={mcpRef}
       >
         <pixiGraphics draw={drawMCP} />
-        <pixiText
+        <NodeName
           text={mcpStyle.text}
-          x={(mcpStyle.width + mcpStyle.extend) / 2}
-          y={mcpStyle.height / 2}
-          anchor={0.5}
-          style={{
-            fontSize: 19,
-            fill: "white",
-          }}
+          nodeWidth={mcpStyle.width + mcpStyle.extend / 2}
+          yShift={mcpStyle.height / 2}
         />
       </pixiContainer>
       {/* Tools tags */}
@@ -175,16 +171,7 @@ export default function ChatNode({ x, y, active }: NodeProps) {
         ref={toolsRef}
       >
         <pixiGraphics draw={drawTools} />
-        <pixiText
-          text={toolsStyle.text}
-          x={-toolsStyle.width / 2}
-          y={0}
-          anchor={0.5}
-          style={{
-            fontSize: 19,
-            fill: "white",
-          }}
-        />
+        <NodeName text={toolsStyle.text} nodeWidth={-toolsStyle.width} />
       </pixiContainer>
       {/* Ports */}
       <pixiContainer x={0} y={height / 2}>
@@ -193,18 +180,7 @@ export default function ChatNode({ x, y, active }: NodeProps) {
       {/* Chat Node body */}
       <pixiContainer eventMode="static" cursor="pointer">
         <pixiGraphics draw={drawBody} />
-        {active && (
-          <pixiText
-            text={text}
-            x={width / 2}
-            y={height / 2}
-            anchor={0.5}
-            style={{
-              fontSize: 19,
-              fill: "white",
-            }}
-          />
-        )}
+        {active && <NodeName text={text} nodeWidth={width} yShift={height / 2} />}
       </pixiContainer>
     </AlignedPixiContainer>
   );

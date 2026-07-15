@@ -5,6 +5,7 @@ import AlignedPixiContainer from "./AlignedPixiContainer";
 import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import NodeName from "./NodeName";
 
 const { w, h, r } = NODE_SIZES["json"];
 
@@ -27,6 +28,7 @@ export default function JsonNode({ x, y, active }: NodeProps) {
     xOffset: nodeStyle.xOffset,
     yOffset: nodeStyle.yOffset,
   });
+
   const drawNode = useCallback(
     (graphics: Graphics) => {
       const { xOffset, yOffset } = nodeShapeRef.current;
@@ -55,12 +57,12 @@ export default function JsonNode({ x, y, active }: NodeProps) {
 
   const { contextSafe } = useGSAP({ scope: containerRef });
 
-  const redrawNode = () => {
+  const redrawNode = useCallback(() => {
     if (!nodeRef.current) return;
     drawNode(nodeRef.current);
-  };
+  }, [drawNode]);
 
-  const expandNode = () => {
+  const expandNode = useCallback(() => {
     contextSafe(() => {
       const { hoverXOffset, hoverYOffset } = nodeStyle;
       gsap.to(nodeShapeRef.current, {
@@ -71,9 +73,9 @@ export default function JsonNode({ x, y, active }: NodeProps) {
         onUpdate: redrawNode,
       });
     })();
-  };
+  }, [contextSafe, redrawNode]);
 
-  const foldNode = () => {
+  const foldNode = useCallback(() => {
     contextSafe(() => {
       const { xOffset, yOffset } = nodeStyle;
       gsap.to(nodeShapeRef.current, {
@@ -84,12 +86,12 @@ export default function JsonNode({ x, y, active }: NodeProps) {
         onUpdate: redrawNode,
       });
     })();
-  };
+  }, [contextSafe, redrawNode]);
 
   useEffect(() => {
     if (active) expandNode();
     else foldNode();
-  }, [active]);
+  }, [active, expandNode, foldNode]);
 
   return (
     <AlignedPixiContainer
@@ -105,15 +107,10 @@ export default function JsonNode({ x, y, active }: NodeProps) {
       <pixiContainer>
         <pixiGraphics ref={nodeRef} draw={drawNode} />
         {active && (
-          <pixiText
+          <NodeName
+            nodeWidth={width}
             text={text}
-            x={width / 2}
-            y={height / 2 - nodeStyle.yOffset}
-            anchor={0.5}
-            style={{
-              fontSize: 19,
-              fill: "white",
-            }}
+            yShift={height / 2 - nodeStyle.yOffset}
           />
         )}
       </pixiContainer>
