@@ -73,6 +73,10 @@ export default function Grid() {
 }
 
 const getVector = (from: Coord, to: Coord, dist: number) => {
+  // const nonZeroDist = Math.max(dist, 0.01);
+  if (dist == 0) {
+    return { x: 0, y: 0 };
+  }
   const vector: Coord = {
     x: (to.x - from.x) / dist,
     y: (to.y - from.y) / dist,
