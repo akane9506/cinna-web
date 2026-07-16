@@ -1,11 +1,11 @@
-import type { Graphics } from "pixi.js";
+import type { FederatedPointerEvent, Graphics } from "pixi.js";
 import type { Coord } from "@/components/graph/types";
 import { useRef } from "react";
 
 const gridStyle = {
-  gridSize: 38,
-  rows: 50,
-  cols: 50,
+  gridSize: 45,
+  rows: 70,
+  cols: 30,
   magRadius: 220,
   magDistance: 20,
 };
@@ -54,10 +54,11 @@ export default function Grid() {
     graphics.stroke({ width: 1 });
   };
 
-  const onMouseMove = (event: MouseEvent) => {
+  const onMouseMove = (event: FederatedPointerEvent) => {
     if (!gridRef.current) return;
     const graphics = gridRef.current;
-    drawGrid(graphics, { x: event.clientX, y: event.clientY });
+    const localPoint = graphics.toLocal(event.global);
+    drawGrid(graphics, { x: localPoint.x, y: localPoint.y });
   };
 
   return (

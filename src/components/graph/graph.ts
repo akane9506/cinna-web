@@ -161,11 +161,12 @@ const json1 = new GraphNode("json1", "json", 800, 300, []);
 const branch2 = new GraphNode("branch2", "branch", 800, 520, [], 3);
 const workflow2 = new GraphNode("workflow2", "workflow", 800, 100, []);
 
-const state2 = new GraphNode("state2", "state", 1050, 420, []);
+const state2 = new GraphNode("state2", "state", 1050, 360, []);
 const io2 = new GraphNode("io2", "io", 1050, 720, []);
-
 const lambda1 = new GraphNode("lambda1", "lambda", 1200, 280, []);
+
 const chat2 = new GraphNode("chat2", "chat", 1200, 520, []);
+const lambda2 = new GraphNode("lambda2", "lambda", 950, 520, []);
 
 //  create graph
 head.children = [chat1, branch1];
@@ -174,7 +175,8 @@ chat1.children = [json1, workflow2];
 state1.children = [json1];
 json1.children = [state2];
 workflow1.children = [branch2];
-branch2.children = [state2, chat2, io2];
+branch2.children = [state2, lambda2, io2];
+lambda2.children = [chat2];
 workflow2.children = [lambda1];
 state2.children = [lambda1];
 
