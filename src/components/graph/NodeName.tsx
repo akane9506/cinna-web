@@ -17,7 +17,11 @@ export default function NodeName({
       x={nodeWidth / 2}
       y={yShift}
       anchor={0.5}
-      style={{ fontSize: 18, fill: "white" }}
+      style={{
+        fontFamily: "Geist Pixel",
+        fontSize: 18,
+        fill: "white",
+      }}
       rotation={rotation}
     />
   );
