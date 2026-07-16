@@ -11,7 +11,8 @@ async function loadFonts() {
   ]);
 }
 
-loadFonts();
+await loadFonts();
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <App />

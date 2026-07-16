@@ -10,26 +10,24 @@ export default function PixiApplication() {
   return (
     <>
       {/*background grid*/}
-      <div ref={backgroundRef} className="absolute top-0 left-0 w-dvw h-dvh -z-10">
+      <div ref={backgroundRef} className="fixed inset-0 -z-10">
         <Application
+          className="w-full h-full"
           preference="webgpu"
-          resizeTo={backgroundRef}
+          resizeTo={window}
           background={0xf1f0ed}
-          antialias
-          autoDensity
-          resolution={window.devicePixelRatio}
         >
           <Grid />
         </Application>
       </div>
       {/*application body*/}
-      <div ref={canvasRef} className="w-[1700px] h-full">
+      <div ref={canvasRef} className="w-full max-w-[1700px] h-full">
         <Application
           preference="webgpu"
           resizeTo={canvasRef}
           backgroundAlpha={0}
-          antialias
           autoDensity
+          antialias
           resolution={window.devicePixelRatio}
         >
           <CanvasContainer />
