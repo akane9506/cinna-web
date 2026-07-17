@@ -150,7 +150,7 @@ const drawEdges = (head: GraphNode): EdgeRenderer[] => {
 };
 
 // create nodes
-const head = new GraphNode("head", "io", 100, 300, []);
+const head = new GraphNode("head", "io", 100, 360, []);
 const chat1 = new GraphNode("chat1", "chat", 380, 200, []);
 const branch1 = new GraphNode("branch1", "branch", 380, 450, [], 2);
 

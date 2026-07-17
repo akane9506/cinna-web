@@ -62,7 +62,7 @@ export default function CanvasContainer() {
         </pixiContainer>
       ))}
       {/*Title*/}
-      <Title x={100} y={860} />
+      <Title x={120} y={700} />
     </pixiContainer>
   );
 }
