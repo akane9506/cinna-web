@@ -1,14 +1,16 @@
 import { Graphics } from "pixi.js";
 import { useCallback } from "react";
-import { COLOR_SCHEME, PORT_SIZE } from "@/components/graph/shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import NodeName from "./NodeName";
 
+const { w, h, r } = NODE_SIZES.io;
+
 const nodeStyle = {
-  width: 160,
-  height: 60,
-  radius: 12,
+  width: w,
+  height: h,
+  radius: r,
   text: "I/O Processor",
 };
 

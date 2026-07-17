@@ -3,13 +3,13 @@ import type { NodeType, Coord, BezierPoints, ColorField } from "./types";
 const PORT_SIZE = 10;
 
 const NODE_SIZES: Record<NodeType, { w: number; h: number; r: number }> = {
-  io: { w: 150, h: 50, r: 12 },
-  chat: { w: 140, h: 90, r: 12 },
-  lambda: { w: 140, h: 80, r: 12 },
+  io: { w: 150, h: 55, r: 6 },
+  chat: { w: 140, h: 90, r: 6 },
+  lambda: { w: 140, h: 80, r: 6 },
   json: { w: 140, h: 80, r: 6 },
-  workflow: { w: 170, h: 100, r: 12 },
+  workflow: { w: 170, h: 100, r: 6 },
   state: { w: 90, h: 0, r: 0 }, // for state node, w means diameter
-  branch: { w: 80, h: 50, r: 12 }, // h for branch means unit height
+  branch: { w: 80, h: 50, r: 6 }, // h for branch means unit height
 };
 
 const COLOR_SCHEME: Record<ColorField, number> = {
