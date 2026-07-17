@@ -21,6 +21,7 @@ export default function NodeName({
         fontFamily: "Geist Pixel",
         fontSize: 18,
         fill: "white",
+        letterSpacing: 0.6,
       }}
       rotation={rotation}
     />
