@@ -1,11 +1,6 @@
 import { Graphics } from "pixi.js";
 import { useCallback } from "react";
-import {
-  COLOR_SCHEME,
-  NODE_SHADOW_FILTER,
-  NODE_SIZES,
-  PORT_SIZE,
-} from "@/components/graph/shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import NodeName from "./NodeName";
@@ -43,12 +38,7 @@ export default function IONode({ x, y, active }: NodeProps) {
   );
 
   return (
-    <AlignedPixiContainer
-      x={x}
-      y={y}
-      nodeHeight={nodeStyle.height}
-      filters={[NODE_SHADOW_FILTER]}
-    >
+    <AlignedPixiContainer x={x} y={y} nodeHeight={nodeStyle.height}>
       <pixiContainer x={0} y={height / 2}>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>

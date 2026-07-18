@@ -2,7 +2,7 @@ import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
 import { Container, Point, type Graphics } from "pixi.js";
 import { useCallback, useEffect, useRef } from "react";
-import { COLOR_SCHEME, NODE_SHADOW_FILTER, NODE_SIZES, PORT_SIZE } from "./shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import NodeName from "./NodeName";
@@ -131,7 +131,6 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
       nodeHeight={height}
       eventMode="static"
       cursor="pointer"
-      filters={NODE_SHADOW_FILTER}
     >
       {/* Gear */}
       <pixiContainer

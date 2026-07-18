@@ -2,7 +2,7 @@ import { useCallback } from "react";
 import AlignedPixiContainer from "./AlignedPixiContainer";
 import type { NodeProps } from "./types";
 import type { Graphics } from "pixi.js";
-import { COLOR_SCHEME, NODE_SHADOW_FILTER, NODE_SIZES, PORT_SIZE } from "./shared";
+import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
 import NodeName from "./NodeName";
 
 const { w } = NODE_SIZES["state"];
@@ -32,7 +32,7 @@ export default function StateNode({ x, y, active }: NodeProps) {
   );
 
   return (
-    <AlignedPixiContainer x={x} y={y} nodeHeight={diameter} filters={NODE_SHADOW_FILTER}>
+    <AlignedPixiContainer x={x} y={y} nodeHeight={diameter}>
       <pixiContainer x={0} y={radius}>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>

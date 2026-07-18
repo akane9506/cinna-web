@@ -7,7 +7,6 @@ import type { NodeProps } from "@/components/graph/types";
 import {
   COLOR_SCHEME,
   GRAPH_EDGE_GRADIENT,
-  NODE_SHADOW_FILTER,
   NODE_SIZES,
   PORT_SIZE,
 } from "@/components/graph/shared";
@@ -158,15 +157,13 @@ export default function WorkflowNode({ x, y, active }: NodeProps) {
         })}
       </pixiContainer>
       {/* Ports */}
-      <pixiContainer filters={NODE_SHADOW_FILTER}>
-        <pixiContainer x={0} y={height / 2}>
-          <pixiGraphics draw={drawPorts} />
-        </pixiContainer>
-        {/* Node body */}
-        <pixiContainer x={0} y={height / 2}>
-          <pixiGraphics ref={nodeShapeRef} draw={drawNode} />
-          {active && <NodeName nodeWidth={width} text={text} />}
-        </pixiContainer>
+      <pixiContainer x={0} y={height / 2}>
+        <pixiGraphics draw={drawPorts} />
+      </pixiContainer>
+      {/* Node body */}
+      <pixiContainer x={0} y={height / 2}>
+        <pixiGraphics ref={nodeShapeRef} draw={drawNode} />
+        {active && <NodeName nodeWidth={width} text={text} />}
       </pixiContainer>
     </AlignedPixiContainer>
   );
