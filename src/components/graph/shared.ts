@@ -1,4 +1,7 @@
+// import { FillGradient } from "pixi.js";
+import { FillGradient } from "pixi.js";
 import type { NodeType, Coord, BezierPoints, ColorField } from "./types";
+import { DropShadowFilter } from "pixi-filters/drop-shadow";
 
 const PORT_SIZE = 10;
 
@@ -12,14 +15,43 @@ const NODE_SIZES: Record<NodeType, { w: number; h: number; r: number }> = {
   branch: { w: 80, h: 50, r: 6 }, // h for branch means unit height
 };
 
+const COLOR_PALETTE = [
+  0x304868, // dark blue
+  0x7890a8, // light blue
+  0xe8a8a0, // light red
+  0xa8b8a8, // light green
+  0xe04848, // warning red
+  0xd0d0d0, // light gray
+  0xf8b880, // bright yellow
+];
+
 const COLOR_SCHEME: Record<ColorField, number> = {
-  nodeBodyA: 0xa09cc1,
-  nodeBodyB: 0x99b6b2,
-  nodeBodyC: 0xd38882,
-  edge: 0x99c2db,
-  activeEdge: 0xa7bee0,
+  title: COLOR_PALETTE[0],
+  subtitle: COLOR_PALETTE[3],
+  nodeBodyA: COLOR_PALETTE[1],
+  nodeBodyB: COLOR_PALETTE[2],
+  nodeBodyC: COLOR_PALETTE[3],
+  edge: COLOR_PALETTE[5],
+  activeEdge: COLOR_PALETTE[1],
   outline: 0xffffff,
 };
+
+const GRAPH_EDGE_GRADIENT = new FillGradient({
+  start: { x: 0, y: 0 },
+  end: { x: 1, y: 0 },
+  colorStops: [
+    { offset: 0, color: COLOR_PALETTE[6] },
+    { offset: 1, color: COLOR_PALETTE[2] },
+  ],
+});
+
+const NODE_SHADOW_FILTER = new DropShadowFilter({
+  offset: { x: 2, y: 3 },
+  blur: 4,
+  quality: 5,
+  resolution: 2,
+  color: COLOR_PALETTE[0],
+});
 
 const yAlign = (y: number | undefined, nodeHeight: number) => {
   return (y || 0) - nodeHeight / 2;
@@ -37,5 +69,12 @@ const getBezierPoints = (start: Coord, end: Coord): BezierPoints => {
   return { bStart: p0, c1: p1, c2: p2, bEnd: p3 };
 };
 
-export { PORT_SIZE, NODE_SIZES, COLOR_SCHEME };
+export {
+  PORT_SIZE,
+  NODE_SIZES,
+  NODE_SHADOW_FILTER,
+  COLOR_SCHEME,
+  COLOR_PALETTE,
+  GRAPH_EDGE_GRADIENT,
+};
 export { yAlign, getBezierPoints };

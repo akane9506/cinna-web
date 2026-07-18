@@ -22,7 +22,7 @@ export default function IONode({ x, y, active }: NodeProps) {
       // this is the base node
       graphics
         .roundRect(0, 0, width, height, radius)
-        .fill({ color: COLOR_SCHEME.nodeBodyB })
+        .fill(COLOR_SCHEME.nodeBodyB)
         .stroke({ width: 2 });
     },
     [width, height, radius],

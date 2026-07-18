@@ -98,7 +98,7 @@ export default function ChatNode({ x, y, active }: NodeProps) {
       // this is the base node
       graphics
         .roundRect(0, 0, width, height, radius)
-        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2, color: COLOR_SCHEME.outline });
     },
     [width, height, radius],

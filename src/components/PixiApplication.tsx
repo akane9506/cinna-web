@@ -15,7 +15,7 @@ export default function PixiApplication() {
           className="w-full h-full"
           preference="webgpu"
           resizeTo={window}
-          background={0xf1f0ed}
+          background={0xffffff}
         >
           <Grid />
         </Application>

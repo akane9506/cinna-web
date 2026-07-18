@@ -2,6 +2,7 @@ import { useGSAP } from "@gsap/react";
 import { CanvasTextMetrics, Container, Graphics, TextStyle } from "pixi.js";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
+import { COLOR_SCHEME } from "./graph/shared";
 
 const title = "cinna";
 const titleStyle: TextStyle = new TextStyle({
@@ -9,13 +10,16 @@ const titleStyle: TextStyle = new TextStyle({
   fontWeight: "500",
   fontSize: 130,
   letterSpacing: 3.0,
+  fill: COLOR_SCHEME.title,
 });
+const FLIP_INDICES = [1, 4];
 
 const subTitle = "Your telegram daily assistant";
 const subTitleStyle: TextStyle = new TextStyle({
   fontFamily: "Geist Pixel",
   fontSize: 30,
   letterSpacing: 1.6,
+  fill: COLOR_SCHEME.subtitle,
 });
 
 export default function Title({ x, y }: { x: number; y: number }) {
@@ -75,6 +79,53 @@ export default function Title({ x, y }: { x: number; y: number }) {
     })();
   };
 
+  const handleLetterFlip = (
+    timeline: gsap.core.Timeline,
+    index: number,
+    order: number,
+  ) => {
+    const letter = titleLetterRefs.current[index];
+    if (!letter) return;
+    const bounds = letter.getLocalBounds();
+    // control the animation start time of each letter
+    const start = order * 0.5;
+    // scale around the visual bottom-center of the character.
+    letter.origin.set(bounds.x + bounds.width / 2, bounds.y + bounds.height);
+    timeline
+      .set(letter.scale, { x: 1 }, start)
+      .to(
+        letter.scale,
+        {
+          x: -1,
+          duration: 0.5,
+          ease: "power1.in",
+        },
+        start + 0.5,
+      )
+      .to(
+        letter.scale,
+        {
+          x: 1,
+          duration: 0.5,
+          ease: "power2.out",
+        },
+        start + 1.0,
+      );
+  };
+
+  // title animation
+  useGSAP(
+    () => {
+      const flipTimeline = gsap.timeline({ repeat: -1, repeatDelay: 0.8 });
+      FLIP_INDICES.forEach((index, order) => {
+        handleLetterFlip(flipTimeline, index, order);
+      });
+      return () => flipTimeline.kill();
+    },
+    { scope: titleRef },
+  );
+
+  // subtitle animation
   useGSAP(handleSubtitleAnimation, { scope: subtitleRef });
 
   return (

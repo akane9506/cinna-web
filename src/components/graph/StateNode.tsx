@@ -18,10 +18,7 @@ export default function StateNode({ x, y, active }: NodeProps) {
   const drawNode = useCallback(
     (graphics: Graphics) => {
       graphics.clear();
-      graphics
-        .circle(0, 0, radius)
-        .fill({ color: COLOR_SCHEME.nodeBodyB })
-        .stroke({ width: 2 });
+      graphics.circle(0, 0, radius).fill(COLOR_SCHEME.nodeBodyC).stroke({ width: 2 });
     },
     [radius],
   );

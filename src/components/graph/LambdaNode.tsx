@@ -93,7 +93,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
       graphics.clear();
       graphics
         .roundShape(getCornerPoints(width, height, cornerOffset), radius)
-        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2 });
     },
     [width, height, radius, cornerOffset],
@@ -116,7 +116,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
         getGearPoints(innerRadius, outerRadius, numTeeth, topLandOffset),
         cornerRadius,
       )
-      .fill({ color: COLOR_SCHEME.nodeBodyC })
+      .fill(COLOR_SCHEME.nodeBodyB)
       .stroke({ width: 2 })
       .circle(0, 0, 20) // the first cut removes the stroke
       .cut()

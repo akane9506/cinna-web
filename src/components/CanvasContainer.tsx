@@ -16,6 +16,7 @@ import JsonNode from "@/components/graph/JsonNode";
 import AnimatedEdge from "@/components/graph/AnimatedEdge";
 import Edge from "@/components/graph/Edge";
 import Title from "@/components/Title";
+import { NODE_SHADOW_FILTER } from "./graph/shared";
 
 export default function CanvasContainer() {
   const [animatedEdges, setAnimatedEdges] = useState<typeof nodeEdges>(animatedNodeEdges);
@@ -52,15 +53,17 @@ export default function CanvasContainer() {
         />
       ))}
       {/* Nodes */}
-      {nodeRenderers.map((renderer) => (
-        <pixiContainer
-          eventMode="static"
-          onPointerEnter={() => handleUpdateAnimatedEdges(renderer)}
-          key={renderer.id}
-        >
-          {renderNode(renderer, activeNodes)}
-        </pixiContainer>
-      ))}
+      <pixiContainer filters={NODE_SHADOW_FILTER}>
+        {nodeRenderers.map((renderer) => (
+          <pixiContainer
+            eventMode="static"
+            onPointerEnter={() => handleUpdateAnimatedEdges(renderer)}
+            key={renderer.id}
+          >
+            {renderNode(renderer, activeNodes)}
+          </pixiContainer>
+        ))}
+      </pixiContainer>
       {/*Title*/}
       <Title x={120} y={700} />
     </pixiContainer>

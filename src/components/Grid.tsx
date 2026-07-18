@@ -3,9 +3,9 @@ import type { Coord } from "@/components/graph/types";
 import { useRef } from "react";
 
 const gridStyle = {
-  gridSize: 45,
+  gridSize: 40,
   rows: 70,
-  cols: 30,
+  cols: 40,
   magRadius: 220,
   magDistance: 20,
 };
@@ -51,7 +51,7 @@ export default function Grid() {
         prevColY = y;
       }
     }
-    graphics.stroke({ width: 1 });
+    graphics.stroke({ width: 1, color: "lightgray", alpha: 0.7 });
   };
 
   const onMouseMove = (event: FederatedPointerEvent) => {

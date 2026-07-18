@@ -4,7 +4,12 @@ import { useCallback, useEffect, useRef } from "react";
 import { Container, Point, type Graphics } from "pixi.js";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
-import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import {
+  COLOR_SCHEME,
+  GRAPH_EDGE_GRADIENT,
+  NODE_SIZES,
+  PORT_SIZE,
+} from "@/components/graph/shared";
 import NodeName from "./NodeName";
 
 const { w, h, r } = NODE_SIZES["workflow"];
@@ -78,7 +83,7 @@ export default function WorkflowNode({ x, y, active }: NodeProps) {
         centeredDiamond[1].x,
         centeredDiamond[1].y,
       )
-      .stroke({ width: 2, color: COLOR_SCHEME.activeEdge });
+      .stroke({ width: 3, fill: GRAPH_EDGE_GRADIENT });
   }, []);
 
   const redrawSubNodes = useCallback(() => {

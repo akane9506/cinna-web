@@ -1,6 +1,13 @@
 type NodeType = "io" | "chat" | "branch" | "json" | "lambda" | "state" | "workflow";
 type ColorField =
-  "edge" | "activeEdge" | "nodeBodyA" | "nodeBodyB" | "outline" | "nodeBodyC";
+  | "title"
+  | "subtitle"
+  | "edge"
+  | "activeEdge"
+  | "nodeBodyA"
+  | "nodeBodyB"
+  | "outline"
+  | "nodeBodyC";
 
 interface Coord {
   x: number;

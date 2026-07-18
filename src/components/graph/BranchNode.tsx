@@ -40,7 +40,7 @@ export default function BranchNode({ x, y, branches, active }: BranchNodeProps) 
           ],
           radius,
         )
-        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2 });
     },
     [totalHeight, radius, width, shrinkX, shrinkY],
