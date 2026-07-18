@@ -2,7 +2,12 @@ import { useCallback, useEffect, useRef } from "react";
 import gsap from "gsap";
 import { DEG_TO_RAD, Graphics, type Container } from "pixi.js";
 import { useGSAP } from "@gsap/react";
-import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import {
+  COLOR_SCHEME,
+  NODE_SHADOW_FILTER,
+  NODE_SIZES,
+  PORT_SIZE,
+} from "@/components/graph/shared";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import NodeName from "./NodeName";
@@ -98,7 +103,7 @@ export default function ChatNode({ x, y, active }: NodeProps) {
       // this is the base node
       graphics
         .roundRect(0, 0, width, height, radius)
-        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2, color: COLOR_SCHEME.outline });
     },
     [width, height, radius],
@@ -155,6 +160,7 @@ export default function ChatNode({ x, y, active }: NodeProps) {
         y={mcpStyle.y}
         rotation={mcpStyle.rotation}
         ref={mcpRef}
+        filters={[NODE_SHADOW_FILTER]}
       >
         <pixiGraphics draw={drawMCP} />
         <NodeName
@@ -169,18 +175,21 @@ export default function ChatNode({ x, y, active }: NodeProps) {
         y={toolsStyle.y}
         rotation={toolsStyle.rotation}
         ref={toolsRef}
+        filters={[NODE_SHADOW_FILTER]}
       >
         <pixiGraphics draw={drawTools} />
         <NodeName text={toolsStyle.text} nodeWidth={-toolsStyle.width} />
       </pixiContainer>
-      {/* Ports */}
-      <pixiContainer x={0} y={height / 2}>
-        <pixiGraphics draw={drawPorts} />
-      </pixiContainer>
-      {/* Chat Node body */}
-      <pixiContainer eventMode="static" cursor="pointer">
-        <pixiGraphics draw={drawBody} />
-        {active && <NodeName text={text} nodeWidth={width} yShift={height / 2} />}
+      <pixiContainer filters={[NODE_SHADOW_FILTER]}>
+        {/* Ports */}
+        <pixiContainer x={0} y={height / 2}>
+          <pixiGraphics draw={drawPorts} />
+        </pixiContainer>
+        {/* Chat Node body */}
+        <pixiContainer eventMode="static" cursor="pointer">
+          <pixiGraphics draw={drawBody} />
+          {active && <NodeName text={text} nodeWidth={width} yShift={height / 2} />}
+        </pixiContainer>
       </pixiContainer>
     </AlignedPixiContainer>
   );

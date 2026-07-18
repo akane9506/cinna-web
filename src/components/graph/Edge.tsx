@@ -15,7 +15,7 @@ export default function Edge({ start, end }: EdgeProps) {
       graphics
         .clear()
         .path(path)
-        .stroke({ color: COLOR_SCHEME.edge, width: 4, alpha: 0.1 });
+        .stroke({ color: COLOR_SCHEME.edge, width: 4, alpha: 0.3 });
     },
     [path],
   );

@@ -2,7 +2,7 @@ import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
 import type { NodeProps } from "@/components/graph/types";
 import { Container, Point, type Graphics } from "pixi.js";
 import { useCallback, useEffect, useRef } from "react";
-import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
+import { COLOR_SCHEME, NODE_SHADOW_FILTER, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import NodeName from "./NodeName";
@@ -93,7 +93,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
       graphics.clear();
       graphics
         .roundShape(getCornerPoints(width, height, cornerOffset), radius)
-        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2 });
     },
     [width, height, radius, cornerOffset],
@@ -116,7 +116,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
         getGearPoints(innerRadius, outerRadius, numTeeth, topLandOffset),
         cornerRadius,
       )
-      .fill({ color: COLOR_SCHEME.nodeBodyC })
+      .fill(COLOR_SCHEME.nodeBodyB)
       .stroke({ width: 2 })
       .circle(0, 0, 20) // the first cut removes the stroke
       .cut()
@@ -131,6 +131,7 @@ export default function LambdaNode({ x, y, active }: NodeProps) {
       nodeHeight={height}
       eventMode="static"
       cursor="pointer"
+      filters={NODE_SHADOW_FILTER}
     >
       {/* Gear */}
       <pixiContainer

@@ -2,7 +2,12 @@ import { useCallback } from "react";
 import { DEG_TO_RAD, type Graphics } from "pixi.js";
 import type { NodeProps } from "@/components/graph/types";
 import AlignedPixiContainer from "@/components/graph/AlignedPixiContainer";
-import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "@/components/graph/shared";
+import {
+  COLOR_SCHEME,
+  NODE_SHADOW_FILTER,
+  NODE_SIZES,
+  PORT_SIZE,
+} from "@/components/graph/shared";
 import NodeName from "./NodeName";
 
 interface BranchNodeProps extends NodeProps {
@@ -40,7 +45,7 @@ export default function BranchNode({ x, y, branches, active }: BranchNodeProps) 
           ],
           radius,
         )
-        .fill({ color: COLOR_SCHEME.nodeBodyA })
+        .fill(COLOR_SCHEME.nodeBodyA)
         .stroke({ width: 2 });
     },
     [totalHeight, radius, width, shrinkX, shrinkY],
@@ -60,7 +65,12 @@ export default function BranchNode({ x, y, branches, active }: BranchNodeProps) 
   );
 
   return (
-    <AlignedPixiContainer x={x} y={y} nodeHeight={totalHeight}>
+    <AlignedPixiContainer
+      x={x}
+      y={y}
+      nodeHeight={totalHeight}
+      filters={NODE_SHADOW_FILTER}
+    >
       <pixiContainer>
         <pixiGraphics draw={drawPorts} />
       </pixiContainer>

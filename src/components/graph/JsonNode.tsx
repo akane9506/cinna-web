@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef } from "react";
 import type { NodeProps } from "./types";
 import { Container, Graphics, Point } from "pixi.js";
 import AlignedPixiContainer from "./AlignedPixiContainer";
-import { COLOR_SCHEME, NODE_SIZES, PORT_SIZE } from "./shared";
+import { COLOR_SCHEME, NODE_SHADOW_FILTER, NODE_SIZES, PORT_SIZE } from "./shared";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import NodeName from "./NodeName";
@@ -100,6 +100,7 @@ export default function JsonNode({ x, y, active }: NodeProps) {
       y={y}
       eventMode="static"
       nodeHeight={height}
+      filters={NODE_SHADOW_FILTER}
     >
       <pixiContainer x={0} y={height / 2}>
         <pixiGraphics draw={drawPorts} />
